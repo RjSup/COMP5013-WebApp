@@ -1,3 +1,7 @@
+
+#* ====================
+#* IMPORTS
+#* ====================
 import os
 import time
 from flask import Flask, render_template, request, redirect, jsonify
@@ -5,7 +9,9 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 import sqlite3
 import hashlib
 from dotenv import load_dotenv
-
+#* ====================
+#* APP SET UP
+#* ====================
 load_dotenv()
 
 app = Flask(__name__)
@@ -13,16 +19,26 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+#* ====================
+#* SETUP
+#* ====================
 
-# Hash the user password
-def hash(password):
-    return hashlib.sha256(password.encode()).hexdigest()
 
 # User class for Flask-Login
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
+        
 
+# login_manager callback to reload the user object from the user ID stored in the session
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
+
+
+#* ====================
+#* FUNCTIONS
+#* ====================
 # Add user to database
 def addUser(username, password):
     # Hash the user's password
@@ -44,6 +60,7 @@ def addUser(username, password):
     conn.commit()
     # Close the connection
     conn.close()
+    
 
 # Authenticate user
 def authUser(username, password):
@@ -59,20 +76,28 @@ def authUser(username, password):
             return User(user[0])
     return None
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
 
+# Hash the user password
+def hash(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+#* ====================
+#* ROUTES
+#* ====================
+# Logout route
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
     logout_user()
     return redirect("/")
 
+
 # Landing page route
 @app.route("/")
 def landingPage():
     return render_template('landing.html')
+
 
 # Signup page route
 @app.route("/signup", methods=["POST"])
@@ -83,7 +108,9 @@ def signup():
         
         addUser(username, password)
         return "success"
+    
 
+# Login route
 @app.route("/login", methods=["POST"])
 def login():
     if request.method == "POST":
@@ -96,13 +123,19 @@ def login():
             return "login successful"
         else:
             return "login failed"
+        
 
+# Check if user is logged in
 @app.route("/check-login")
 def checkLogin():
     if current_user.is_authenticated:
         return jsonify({"logged_in": True})
     else:
         return jsonify({"logged_in": False})
+    
 
+#* ====================
+#* START APP
+#* ====================
 if __name__ == "__main__":
     app.run(debug=True)
