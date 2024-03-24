@@ -1,0 +1,49 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversely | Debate Forum</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <section id="landing">
+        <nav>
+            <div class="title">
+               <a href="/">Conversely</a>
+            </div>
+            <div id="authLinks" class="auth-links">
+                <button>
+                    <a href="#" id="loginLink">Login</a>
+                </button>
+                <button>
+                    <a href="#" id="signupLink">Sign Up</a>
+                </button>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="auth-form" id="authForms">
+                
+            </div>
+            <h1>Welcome to Conversely</h1>
+            <div id="authForms">
+                
+            </div>
+            
+            <div class="popularTopics">
+
+            </div>
+        </div>
+        <div class="topicCarousel">
+           
+        </div>
+        <footer>
+            <p>&copy; 2024 Conversely</p>
+        </footer>
+    </section>
+    <script src="{{ url_for('static', filename='landing.js') }}"> </script>
+</body>
+</html>
