@@ -1,8 +1,8 @@
-/* static/styles.css */
+/** Reset CSS */
 * {
     margin: 0;
 }
-
+/** General Styles */
 #landing {
     height: 100vh;
     display: flex;
@@ -10,10 +10,11 @@
     background: rgba(248, 246, 244, 1);
 }
 
+/** Navbar Styles */
 .auth-form {
     display: none;
 }
-/* Navigation bar */
+
 nav {
     background: rgba(196, 223, 223, 1);
     color: #fff;
@@ -22,7 +23,6 @@ nav {
     justify-content: space-between;
 }
 
-/* Title "Conversely" */
 .title a {
     font-size: 24px;
     text-decoration: none;
@@ -30,7 +30,6 @@ nav {
     cursor: pointer;
 }
 
-/* Sign in and Sign up links */
 .auth-links a {
     color: #fff;
     text-decoration: none;
@@ -62,7 +61,7 @@ nav {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    width: 10%; /* Default width for big screens */
+    width: 10%; 
 }
 
 #loginForm {
@@ -89,6 +88,7 @@ nav {
     margin-bottom: 10px;
 }
 
+/** Main Content Styles */
 .container {
     display: flex;
     justify-content: center;
@@ -101,6 +101,7 @@ nav {
     font-size: 45px;
 }
 
+/* TOPICS SECTION */
 .topicCarousel {
     display: flex;
     justify-content: center;

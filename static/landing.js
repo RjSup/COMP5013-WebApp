@@ -1,11 +1,19 @@
-// landing page logic
+//* ====================
+//* LANDING PAGE SCRIPTS
+//* ====================
 
+
+//* ====================
+//* SCRIPTS TO LOAD ON PAGE LOAD
+//* ====================
 $(document).ready(function() {
     checkLoggedIn(); // Check if user is logged in
    
     // Add event listener for login link
     $(document).on('click', '#loginLink', function(e) {
+        // Prevent default action
         e.preventDefault();
+        // Show login form
         showLoginForm();
     });
 
@@ -22,9 +30,11 @@ $(document).ready(function() {
     });
 });
 
-
-// Function to display login form
+//* ====================
+//* DISPLAY AUTH FORMS
+//* ====================
 function showLoginForm() {
+    // Display login form
     $('#authForms').html(`
         <form id="loginForm">
             <input type="text" id="loginUsername" placeholder="Username" required>
@@ -32,16 +42,20 @@ function showLoginForm() {
             <button type="submit">Login</button>
         </form>
     `);
-
+    // Add event listener for login form
     $('#loginForm').submit(function(e) {
         e.preventDefault();
+        // Get username and password
         var username = $('#loginUsername').val();
         var password = $('#loginPassword').val();
+        // Call login function
         login(username, password);
     });
 }
 
-// Function to display signup form
+//* ====================
+//* SHOW SIGNUP FORM
+//* ====================
 function showSignupForm() {
     $('#authForms').html(`
         <form id="signupForm">
@@ -50,7 +64,7 @@ function showSignupForm() {
             <button type="submit">Sign Up</button>
         </form>
     `);
-
+    // Add event listener for signup form
     $('#signupForm').submit(function(e) {
         e.preventDefault();
         var username = $('#signupUsername').val();
@@ -59,26 +73,36 @@ function showSignupForm() {
     });
 }
 
-// Function to login
+//* ====================
+//* LOGIN
+//* ====================
 function login(username, password) {
+    // Send login request to server
     $.ajax({
+        // Set request type
         type: 'POST',
+        // Set request URL
         url: '/login',
+        // Set request data
         data: {
             username: username,
             password: password
         },
+        // Handle successful response
         success: function(response) {
             alert(response); // Handle response from server
             window.location.href = '/'; // Redirect to home page after successful login
         },
+        // Handle error response
         error: function(xhr, status, error) {
             alert("Error: " + error); // Handle error
         }
     });
 }
 
-// Function to sign up
+//* ====================
+//* SIGNUP
+//* ====================
 function signup(username, password) {
     $.ajax({
         type: 'POST',
@@ -98,6 +122,9 @@ function signup(username, password) {
     });
 }
 
+//* ====================
+//* CHECK IS LOGGED IN
+//* ====================
 // Function to check login status
 function checkLoggedIn() {
     $.ajax({
@@ -121,7 +148,9 @@ function checkLoggedIn() {
     });
 }
 
-// Function to logout
+//* ====================
+//* LOGOUT
+//* ====================
 function logout() {
     $.ajax({
         type: 'POST',
