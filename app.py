@@ -132,8 +132,39 @@ def checkLogin():
         return jsonify({"logged_in": True})
     else:
         return jsonify({"logged_in": False})
-    
 
+
+@app.route("/add_topic", methods=["POST"])
+@login_required
+def add_topic():
+    if request.method == "POST":
+        topicName = request.form["topicName"]
+        postingUser = current_user.id
+        creationTime = int(time.time())
+        # Use the current time as the last visit time
+        updateTime = creationTime
+        # Users shouldn't be admins
+        conn = sqlite3.connect('debate.sqlite')
+        c = conn.cursor()
+        c.execute("INSERT INTO topic (topicName, postingUser, creationTime, updateTime) VALUES (?, ?, ?, ?)",
+                  (topicName, postingUser, creationTime, updateTime))
+        conn.commit()
+        conn.close()
+        return "success"
+    else:
+        return "Please log in to add a topic"
+
+
+@app.route("/fetch_topics")
+def fetch_topics():
+    conn = sqlite3.connect('debate.sqlite')
+    c = conn.cursor()
+    c.execute("SELECT topic.topicName, user.userName FROM topic JOIN user ON topic.postingUser = userID")
+    topics = [{'topicName': row[0], 'postingUser': row[1]} for row in c.fetchall()]
+    conn.close()
+    return jsonify({'topics': topics})
+
+    
 #* ====================
 #* START APP
 #* ====================

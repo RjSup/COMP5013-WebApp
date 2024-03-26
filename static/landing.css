@@ -4,7 +4,7 @@
 }
 /** General Styles */
 #landing {
-    height: 100vh;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     background: rgba(248, 246, 244, 1);
@@ -106,6 +106,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 75vh;
     border: 1px solid black;
 }
@@ -116,4 +117,35 @@ footer {
     padding: 3px 20px;
     display: flex;
     justify-content: center;
+    justify-self: end;
 }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-gap: 20px;
+    align-items: stretch;
+  }
+  
+  .grid > article {
+    height: min-content;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+  }
+  
+  .grid > article img {
+    max-width: 100%;
+  }
+  
+  .grid .text {
+    padding: 20px;
+  }
+
+  .container2 {
+    display: flex;
+    height: 75%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 25vh;
+  }

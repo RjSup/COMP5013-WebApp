@@ -28,6 +28,35 @@ $(document).ready(function() {
         e.preventDefault();
         logout();
     });
+
+    getTopics(); // Get topics from the database
+    
+    // Add event listener for add topic form
+    $('#addTopicForm').submit(function(event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        // Get input values
+        var topicName = $('#topicName').val();
+        var postingUser = $('#postingUser').val();
+
+         // Check if user is logged in
+         $.ajax({
+            url: '/check-login',
+            type: 'GET',
+            success: function(response) {
+                if (response.logged_in) {
+                    // User is logged in, proceed with adding topic
+                    addTopic(topicName, postingUser);
+                } else {
+                    // User is not logged in, show login form
+                    showLoginForm();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    });
 });
 
 //* ====================
@@ -162,5 +191,80 @@ function logout() {
         error: function(xhr, status, error) {
             alert("Error: " + error); // Handle error
         }
+    });
+}
+
+//* ====================
+//* Add topic form
+//* ====================
+
+// Function to add topic
+function addTopic(topicName, postingUser) {
+    // AJAX request to add topic to the database
+    $.ajax({
+        url: '/add_topic',
+        type: 'POST',
+        data: {
+            topicName: topicName,
+            postingUser: postingUser
+        },
+        success: function(response) {
+            // If the topic is successfully added to the database, update the UI
+            $('#topicCards').append('<div class="topicCard">' +
+                '<h3>' + topicName + '</h3>' +
+                '<p>Posting User: ' + postingUser + '</p>' +
+                '</div>');
+            
+            // Clear input fields
+            $('#topicId').val('');
+            $('#topicName').val('');
+            $('#postingUser').val('');
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+}
+
+//* ====================
+//* Get topics
+//* ====================
+function getTopics() {
+    $.ajax({
+        type: 'GET',
+        url: '/fetch_topics',
+        success: function(response) {
+            renderTopics(response.topics);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+}
+
+//* ====================
+//* Render topics
+//* ====================
+function renderTopics(topics) {
+    $('#topicCards').empty(); // Clear previous topics
+
+    topics.forEach(function(topic) {
+        // Create a topic card element
+        var topicCard = $('<div class="topicCard">' +
+                            '<h3>'+ topic.topicName + '</h3>' +
+                            '<p>' + topic.postingUser + '</p>' +
+                         '</div>');
+
+        // Append the topic card to the topicCards container
+        $('#topicCards').append(topicCard);
+    });
+
+    // Apply CSS to style the grid layout
+    $('#topicCards').css({
+        'display': 'grid',
+        'grid-template-columns': 'repeat(4, 1fr)', // 4 columns
+        'grid-template-rows': 'repeat(3, 1fr)',    // 3 rows
+        'gap': '20px',                              // Gap between cards
+        'padding': '20px'                           // Padding around the grid
     });
 }

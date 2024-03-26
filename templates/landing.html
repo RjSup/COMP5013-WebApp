@@ -38,11 +38,16 @@
             </div>
         </div>
         <div class="topicCarousel">
-           
+            <form id="addTopicForm">
+                <input type="text" id="topicName" placeholder="Topic Name">
+                <input type="text" id="postingUser" placeholder="Posting User">
+                <button type="submit" id="addTopicBtn">Add Topic</button>
+            </form>
+
+            <div id="topicCards"></div>
+            
         </div>
-        <footer>
-            <p>&copy; 2024 Conversely</p>
-        </footer>
+        
     </section>
     <script src="{{ url_for('static', filename='landing.js') }}"> </script>
 </body>
