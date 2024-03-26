@@ -253,6 +253,7 @@ function renderTopics(topics) {
         var topicCard = $('<div class="topicCard">' +
                             '<h3>'+ topic.topicName + '</h3>' +
                             '<p>' + topic.postingUser + '</p>' +
+                            '<button>'+ "Go" +'</button>' +
                          '</div>');
 
         // Append the topic card to the topicCards container
@@ -262,9 +263,14 @@ function renderTopics(topics) {
     // Apply CSS to style the grid layout
     $('#topicCards').css({
         'display': 'grid',
-        'grid-template-columns': 'repeat(4, 1fr)', // 4 columns
+        'grid-template-columns': 'repeat(8, 1fr)', // 4 columns
         'grid-template-rows': 'repeat(3, 1fr)',    // 3 rows
         'gap': '20px',                              // Gap between cards
-        'padding': '20px'                           // Padding around the grid
+        'padding': '60px',
+    });
+
+    $('.topicCard').css({
+        'box-shadow': '0 0 10px rgba(0, 0, 0, 0.2)', // Border shadow
+        'padding': '20px' // Padding around the grid
     });
 }
