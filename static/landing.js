@@ -8,6 +8,7 @@
 //* ====================
 $(document).ready(function() {
     checkLoggedIn(); // Check if user is logged in
+    getTopics(); // Get topics from the database
    
     // Add event listener for login link
     $(document).on('click', '#loginLink', function(e) {
@@ -209,6 +210,7 @@ function addTopic(topicName, postingUser) {
             postingUser: postingUser
         },
         success: function(response) {
+            getTopics(); // Get topics from the database    
             // If the topic is successfully added to the database, update the UI
             $('#topicCards').append('<div class="topicCard">' +
                 '<h3>' + topicName + '</h3>' +
@@ -256,10 +258,9 @@ function renderTopics(topics) {
                             '<button>'+ "Go" +'</button>' +
                          '</div>');
 
-        // Append the topic card to the topicCards container
-        $('#topicCards').append(topicCard);
-    });
-
+         // Append the topic card to the topicCards container
+     $('#topicCards').append(topicCard);
+        
     // Apply CSS to style the grid layout
     $('#topicCards').css({
         'display': 'grid',
@@ -272,5 +273,6 @@ function renderTopics(topics) {
     $('.topicCard').css({
         'box-shadow': '0 0 10px rgba(0, 0, 0, 0.2)', // Border shadow
         'padding': '20px' // Padding around the grid
+    });
     });
 }
