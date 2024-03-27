@@ -100,7 +100,7 @@ def landingPage():
 
 
 # Signup page route
-@app.route("/signup", methods=["POST"])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
         username = request.form["username"]
@@ -108,6 +108,8 @@ def signup():
 
         addUser(username, password)
         return "success"
+    else:
+        return "Error"
 
 
 # Login route
@@ -123,6 +125,8 @@ def login():
             return "login successful"
         else:
             return "login failed"
+    else:
+        return "Error"
 
 
 # Check if user is logged in
