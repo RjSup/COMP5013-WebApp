@@ -152,7 +152,8 @@ def add_topic():
         conn.close()
         return "success"
     else:
-        return "Please log in to add a topic"
+        login_manager.unauthorized()
+        return "Please log in to add a topic."
 
 
 @app.route("/fetch_topics")
