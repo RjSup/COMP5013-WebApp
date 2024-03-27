@@ -28,7 +28,7 @@ login_manager.init_app(app)
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
-        
+
 
 # login_manager callback to reload the user object from the user ID stored in the session
 @login_manager.user_loader
@@ -60,7 +60,7 @@ def addUser(username, password):
     conn.commit()
     # Close the connection
     conn.close()
-    
+
 
 # Authenticate user
 def authUser(username, password):
@@ -69,7 +69,7 @@ def authUser(username, password):
     c.execute("SELECT * FROM user WHERE userName = ?", (username,))
     user = c.fetchone()
     conn.close()
-    
+
     if user:
         storedPassword = user[2]
         if hash(password) == storedPassword:
@@ -105,10 +105,10 @@ def signup():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         addUser(username, password)
         return "success"
-    
+
 
 # Login route
 @app.route("/login", methods=["POST"])
@@ -116,14 +116,14 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         user = authUser(username, password)
         if user:
             login_user(user)
             return "login successful"
         else:
             return "login failed"
-        
+
 
 # Check if user is logged in
 @app.route("/check-login")
@@ -165,7 +165,7 @@ def fetch_topics():
     conn.close()
     return jsonify({'topics': topics})
 
-    
+
 #* ====================
 #* START APP
 #* ====================
