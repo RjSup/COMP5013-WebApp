@@ -29,7 +29,7 @@ login_manager.init_app(app)
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
-        
+
 
 # login_manager callback to reload the user object from the user ID stored in the session
 @login_manager.user_loader
@@ -62,33 +62,6 @@ def addUser(username, password, isAdmin):
     # Close the connection
     conn.close()
     
-    
-@app.route("/add_admin", methods=["GET","POST"])
-def add_admin():
-    if request.method == "GET":
-        return render_template("admin.html")
-    
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        
-        addUser(username, password, isAdmin=True)
-        return "Success"
-    else:
-        return "Why are you here?"   
-    
-
-# Check if user is admin
-def isAdmin():
-    if current_user.is_authenticated:
-        conn = sqlite3.connect('debate.sqlite')
-        c = conn.cursor()
-        c.execute("SELECT isAdmin FROM user WHERE userID = ?", (current_user.id,))
-        isAdmin = c.fetchone()[0]
-        conn.close()
-        return isAdmin
-    return False
-    
 
 # Authenticate user
 def authUser(username, password):
@@ -97,7 +70,7 @@ def authUser(username, password):
     c.execute("SELECT * FROM user WHERE userName = ?", (username,))
     user = c.fetchone()
     conn.close()
-    
+
     if user:
         storedPassword = user[2]
         if hash(password) == storedPassword:
@@ -128,15 +101,17 @@ def landingPage():
 
 
 # Signup page route
-@app.route("/signup", methods=["POST"])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         addUser(username, password)
         return "success"
-    
+    else:
+        return "Error"
+
 
 # Login route
 @app.route("/login", methods=["POST"])
@@ -144,14 +119,16 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         user = authUser(username, password)
         if user:
             login_user(user)
             return "login successful"
         else:
             return "login failed"
-        
+    else:
+        return "Error"
+
 
 # Check if user is logged in
 @app.route("/check-login")
@@ -183,7 +160,8 @@ def add_topic():
         else:
             return "Only admins can add topics"
     else:
-        return "Please log in to add a topic"
+        login_manager.unauthorized()
+        return "Please log in to add a topic."
 
 
 @app.route("/fetch_topics")
@@ -195,7 +173,7 @@ def fetch_topics():
     conn.close()
     return jsonify({'topics': topics})
 
-    
+
 #* ====================
 #* START APP
 #* ====================
