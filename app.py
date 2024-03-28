@@ -38,13 +38,15 @@ global isAdmin
 #* FUNCTIONS
 #* ====================
 # Add user to database
-def addUser(username, password, isAdmin):
+def addUser(username, password):
     # Hash the user's password
     passwordHash = hash(password)
     # Get the current time
     creationTime = int(time.time())
     # Use the current time as the last visit time
     lastVisit = creationTime
+    # Users shouldn't be admins
+    isAdmin = False
     # Connect to the database
     conn = sqlite3.connect('debate.sqlite')
     # Create a cursor object
