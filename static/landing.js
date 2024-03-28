@@ -274,7 +274,7 @@ function renderTopics(topics) {
                          '</div>');
 
          // Append the topic card to the topicCards container
-     $('#topicCards').append(topicCard);
+    $('#topicCards').append(topicCard);
         
     // Apply CSS to style the grid layout
     $('#topicCards').css({
