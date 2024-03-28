@@ -95,7 +95,7 @@ def isAdmin():
         isAdmin = c.fetchone()[0]
         conn.close()
         return isAdmin
-    return False
+    return isAdmin
 
 # Hash the user password
 def hash(password):
@@ -144,7 +144,7 @@ def login():
 @app.route("/check-login")
 def checkLogin():
     if current_user.is_authenticated:
-        return jsonify({"logged_in": True, "is_admin": isAdmin()})
+        return jsonify({"logged_in": True})
     else:
         return jsonify({"logged_in": False})
 

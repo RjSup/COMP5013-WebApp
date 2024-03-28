@@ -163,22 +163,13 @@ function checkLoggedIn() {
                 // User is logged in, show logout link
                 $('#authLinks').html(`<a id="logoutLink" href="#">Logout</a>`);
                 // Check if user is admin
-                $.ajax({
-                    type: 'GET',
-                    url: '/check-admin',
-                    success: function(response) {
-                        if (response.is_admin) {
-                            // User is admin, show add topic form
-                            $('#addTopicForm').show();
-                        } else {
-                            // User is not admin, hide add topic form
-                            $('#addTopicForm').hide();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error:", error);
-                    }
-                });
+                if (response.is_admin) {
+                    // User is admin, show add topic form
+                    $('#addTopicForm').show();
+                } else {
+                    // User is not admin, hide add topic form
+                    $('#addTopicForm').hide();
+                }
             } else {
                 // User is not logged in, show login and signup links
                 $('#authLinks').html(`
@@ -193,6 +184,7 @@ function checkLoggedIn() {
         }
     });
 }
+
 
 //* ====================
 //* LOGOUT
@@ -270,11 +262,12 @@ function renderTopics(topics) {
         // Create a topic card element
         var topicCard = $('<div class="topicCard">' +
                             '<h3>'+ topic.topicName + '</h3>' +
+                            '<p>' + topic.postingUser + '</p>' +
                             '<button>'+ "Go" +'</button>' +
                          '</div>');
 
          // Append the topic card to the topicCards container
-    $('#topicCards').append(topicCard);
+     $('#topicCards').append(topicCard);
         
     // Apply CSS to style the grid layout
     $('#topicCards').css({
