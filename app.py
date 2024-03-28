@@ -17,6 +17,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 #* ====================
@@ -35,20 +36,20 @@ class User(UserMixin):
 def load_user(user_id):
     return User(user_id)
 
+global isAdmin
+
 
 #* ====================
 #* FUNCTIONS
 #* ====================
 # Add user to database
-def addUser(username, password):
+def addUser(username, password, isAdmin):
     # Hash the user's password
     passwordHash = hash(password)
     # Get the current time
     creationTime = int(time.time())
     # Use the current time as the last visit time
     lastVisit = creationTime
-    # Users shouldn't be admins
-    isAdmin = False
     # Connect to the database
     conn = sqlite3.connect('debate.sqlite')
     # Create a cursor object
@@ -60,6 +61,33 @@ def addUser(username, password):
     conn.commit()
     # Close the connection
     conn.close()
+    
+    
+@app.route("/add_admin", methods=["GET","POST"])
+def add_admin():
+    if request.method == "GET":
+        return render_template("admin.html")
+    
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        
+        addUser(username, password, isAdmin=True)
+        return "Success"
+    else:
+        return "Why are you here?"   
+    
+
+# Check if user is admin
+def isAdmin():
+    if current_user.is_authenticated:
+        conn = sqlite3.connect('debate.sqlite')
+        c = conn.cursor()
+        c.execute("SELECT isAdmin FROM user WHERE userID = ?", (current_user.id,))
+        isAdmin = c.fetchone()[0]
+        conn.close()
+        return isAdmin
+    return False
     
 
 # Authenticate user
@@ -138,19 +166,22 @@ def checkLogin():
 @login_required
 def add_topic():
     if request.method == "POST":
-        topicName = request.form["topicName"]
-        postingUser = current_user.id
-        creationTime = int(time.time())
-        # Use the current time as the last visit time
-        updateTime = creationTime
-        # Users shouldn't be admins
-        conn = sqlite3.connect('debate.sqlite')
-        c = conn.cursor()
-        c.execute("INSERT INTO topic (topicName, postingUser, creationTime, updateTime) VALUES (?, ?, ?, ?)",
-                  (topicName, postingUser, creationTime, updateTime))
-        conn.commit()
-        conn.close()
-        return "success"
+        if isAdmin():  # Check if the current user is an admin
+            topicName = request.form["topicName"]
+            postingUser = current_user.id
+            creationTime = int(time.time())
+            # Use the current time as the last visit time
+            updateTime = creationTime
+            # Connect to the database
+            conn = sqlite3.connect('debate.sqlite')
+            c = conn.cursor()
+            c.execute("INSERT INTO topic (topicName, postingUser, creationTime, updateTime) VALUES (?, ?, ?, ?)",
+                      (topicName, postingUser, creationTime, updateTime))
+            conn.commit()
+            conn.close()
+            return "success"
+        else:
+            return "Only admins can add topics"
     else:
         return "Please log in to add a topic"
 

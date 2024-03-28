@@ -30,8 +30,6 @@ $(document).ready(function() {
         logout();
     });
 
-    getTopics(); // Get topics from the database
-    
     // Add event listener for add topic form
     $('#addTopicForm').submit(function(event) {
         event.preventDefault(); // Prevent default form submission
@@ -40,8 +38,8 @@ $(document).ready(function() {
         var topicName = $('#topicName').val();
         var postingUser = $('#postingUser').val();
 
-         // Check if user is logged in
-         $.ajax({
+        // Check if user is logged in
+        $.ajax({
             url: '/check-login',
             type: 'GET',
             success: function(response) {
@@ -164,12 +162,30 @@ function checkLoggedIn() {
             if (response.logged_in) {
                 // User is logged in, show logout link
                 $('#authLinks').html(`<a id="logoutLink" href="#">Logout</a>`);
+                // Check if user is admin
+                $.ajax({
+                    type: 'GET',
+                    url: '/check-admin',
+                    success: function(response) {
+                        if (response.is_admin) {
+                            // User is admin, show add topic form
+                            $('#addTopicForm').show();
+                        } else {
+                            // User is not admin, hide add topic form
+                            $('#addTopicForm').hide();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
             } else {
                 // User is not logged in, show login and signup links
                 $('#authLinks').html(`
                     <a id="loginLink" href="#">Login</a>
                     <a id="signupLink" href="#">Sign Up</a>
                 `);
+                $('#addTopicForm').hide(); // Hide add topic form for non-logged-in users
             }
         },
         error: function(xhr, status, error) {
@@ -254,7 +270,6 @@ function renderTopics(topics) {
         // Create a topic card element
         var topicCard = $('<div class="topicCard">' +
                             '<h3>'+ topic.topicName + '</h3>' +
-                            '<p>' + topic.postingUser + '</p>' +
                             '<button>'+ "Go" +'</button>' +
                          '</div>');
 
