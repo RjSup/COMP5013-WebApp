@@ -206,7 +206,7 @@ function renderTopics(topics) {
             'display': 'grid',
             'grid-template-columns': 'repeat(8, 1fr)',
             'grid-template-rows': 'repeat(3, 1fr)',
-            'gap': '20px',
+            'gap': '40px',
             'padding': '60px',
         });
 

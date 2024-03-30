@@ -16,6 +16,11 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
+app.config.update(
+    SESSION_COOKIE_SECURE=True,  # Ensure cookies are only sent over HTTPS
+    SESSION_COOKIE_SAMESITE="None",  # Allow cookies to be sent in cross-site requests
+)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 #* ====================
