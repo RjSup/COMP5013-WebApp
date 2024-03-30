@@ -1,15 +1,8 @@
-/** Reset CSS */
 * {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-/** General Styles */
-#landing {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/** Navbar Styles */
 .auth-form {
     display: none;
 }
@@ -85,48 +78,4 @@ nav {
 
 #signupForm, #signupUsername, #signupPassword, #signupSubmit{
     margin-bottom: 10px;
-}
-
-/** Main Content Styles */
-.container {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    height: 25vh;
-}
-
-.container h1 {
-    font-size: 45px;
-}
-
-/* TOPICS SECTION */
-.topicCarousel {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    height: 75vh;
-    border-top: 1px solid black;
-    padding: 20px;
-}
-
-
-footer {
-    color: black;
-    padding: 3px 20px;
-    display: flex;
-    justify-content: center;
-    justify-self: end;
-}
-
-#topicCards button {
-    background: rgba(196, 223, 223, 1);
-    padding: 5px;
-    border-radius: 5px;
-    text-decoration: none;
-}
-
-#topicCards h3 {
-    padding-top: 100px;;
 }

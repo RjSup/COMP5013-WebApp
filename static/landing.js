@@ -1,20 +1,10 @@
-//* ====================
-//* LANDING PAGE SCRIPTS
-//* ====================
-
-
-//* ====================
-//* SCRIPTS TO LOAD ON PAGE LOAD
-//* ====================
 $(document).ready(function() {
     checkLoggedIn(); // Check if user is logged in
     getTopics(); // Get topics from the database
    
     // Add event listener for login link
     $(document).on('click', '#loginLink', function(e) {
-        // Prevent default action
         e.preventDefault();
-        // Show login form
         showLoginForm();
     });
 
@@ -32,22 +22,17 @@ $(document).ready(function() {
 
     // Add event listener for add topic form
     $('#addTopicForm').submit(function(event) {
-        event.preventDefault(); // Prevent default form submission
-        
-        // Get input values
+        event.preventDefault();
         var topicName = $('#topicName').val();
         var postingUser = $('#postingUser').val();
-
         // Check if user is logged in
         $.ajax({
             url: '/check-login',
             type: 'GET',
             success: function(response) {
                 if (response.logged_in) {
-                    // User is logged in, proceed with adding topic
                     addTopic(topicName, postingUser);
                 } else {
-                    // User is not logged in, show login form
                     showLoginForm();
                 }
             },
@@ -58,11 +43,7 @@ $(document).ready(function() {
     });
 });
 
-//* ====================
-//* DISPLAY AUTH FORMS
-//* ====================
 function showLoginForm() {
-    // Display login form
     $('#authForms').html(`
         <form id="loginForm">
             <input type="text" id="loginUsername" placeholder="Username" required>
@@ -70,20 +51,14 @@ function showLoginForm() {
             <button type="submit">Login</button>
         </form>
     `);
-    // Add event listener for login form
     $('#loginForm').submit(function(e) {
         e.preventDefault();
-        // Get username and password
         var username = $('#loginUsername').val();
         var password = $('#loginPassword').val();
-        // Call login function
         login(username, password);
     });
 }
 
-//* ====================
-//* SHOW SIGNUP FORM
-//* ====================
 function showSignupForm() {
     $('#authForms').html(`
         <form id="signupForm">
@@ -92,7 +67,6 @@ function showSignupForm() {
             <button type="submit">Sign Up</button>
         </form>
     `);
-    // Add event listener for signup form
     $('#signupForm').submit(function(e) {
         e.preventDefault();
         var username = $('#signupUsername').val();
@@ -101,36 +75,25 @@ function showSignupForm() {
     });
 }
 
-//* ====================
-//* LOGIN
-//* ====================
 function login(username, password) {
-    // Send login request to server
     $.ajax({
-        // Set request type
         type: 'POST',
-        // Set request URL
         url: '/login',
-        // Set request data
         data: {
             username: username,
             password: password
         },
-        // Handle successful response
         success: function(response) {
-            alert(response); // Handle response from server
-            window.location.href = '/'; // Redirect to home page after successful login
+            alert(response);
+            window.location.href = '/';
+            checkLoggedIn();
         },
-        // Handle error response
         error: function(xhr, status, error) {
-            alert("Error: " + error); // Handle error
+            alert("Error: " + error);
         }
     });
 }
 
-//* ====================
-//* SIGNUP
-//* ====================
 function signup(username, password) {
     $.ajax({
         type: 'POST',
@@ -140,43 +103,34 @@ function signup(username, password) {
             password: password
         },
         success: function(response) {
-            alert(response); // Handle response from server
+            alert(response);
             window.location.href = '/';
-            checkLoggedIn(); // Redirect to home page after successful signup
+            checkLoggedIn();
         },
         error: function(xhr, status, error) {
-            alert("Error: " + error); // Handle error
+            alert("Error: " + error);
         }
     });
 }
 
-//* ====================
-//* CHECK IS LOGGED IN
-//* ====================
-// Function to check login status
 function checkLoggedIn() {
     $.ajax({
         type: 'GET',
         url: '/check-login',
         success: function(response) {
             if (response.logged_in) {
-                // User is logged in, show logout link
                 $('#authLinks').html(`<a id="logoutLink" href="#">Logout</a>`);
-                // Check if user is admin
                 if (response.is_admin) {
-                    // User is admin, show add topic form
                     $('#addTopicForm').show();
                 } else {
-                    // User is not admin, hide add topic form
                     $('#addTopicForm').hide();
                 }
             } else {
-                // User is not logged in, show login and signup links
                 $('#authLinks').html(`
                     <a id="loginLink" href="#">Login</a>
                     <a id="signupLink" href="#">Sign Up</a>
                 `);
-                $('#addTopicForm').hide(); // Hide add topic form for non-logged-in users
+                $('#addTopicForm').hide();
             }
         },
         error: function(xhr, status, error) {
@@ -185,31 +139,20 @@ function checkLoggedIn() {
     });
 }
 
-
-//* ====================
-//* LOGOUT
-//* ====================
 function logout() {
     $.ajax({
         type: 'POST',
         url: '/logout',
         success: function(response) {
-            //alert(response); // Handle response from server
-            checkLoggedIn(); // Check login status after logout
+            checkLoggedIn();
         },
         error: function(xhr, status, error) {
-            alert("Error: " + error); // Handle error
+            alert("Error: " + error);
         }
     });
 }
 
-//* ====================
-//* Add topic form
-//* ====================
-
-// Function to add topic
 function addTopic(topicName, postingUser) {
-    // AJAX request to add topic to the database
     $.ajax({
         url: '/add_topic',
         type: 'POST',
@@ -218,14 +161,12 @@ function addTopic(topicName, postingUser) {
             postingUser: postingUser
         },
         success: function(response) {
-            getTopics(); // Get topics from the database    
-            // If the topic is successfully added to the database, update the UI
+            getTopics();
             $('#topicCards').append('<div class="topicCard">' +
                 '<h3>' + topicName + '</h3>' +
                 '<p>Posting User: ' + postingUser + '</p>' +
                 '</div>');
             
-            // Clear input fields
             $('#topicId').val('');
             $('#topicName').val('');
             $('#postingUser').val('');
@@ -236,9 +177,6 @@ function addTopic(topicName, postingUser) {
     });
 }
 
-//* ====================
-//* Get topics
-//* ====================
 function getTopics() {
     $.ajax({
         type: 'GET',
@@ -252,35 +190,44 @@ function getTopics() {
     });
 }
 
-//* ====================
-//* Render topics
-//* ====================
 function renderTopics(topics) {
-    $('#topicCards').empty(); // Clear previous topics
+    $('#topicCards').empty();
 
-    topics.forEach(function(topic) {
-        // Create a topic card element
-        var topicCard = $('<div class="topicCard">' +
+    topics.forEach(function(topic, index) {
+        var topicCard = $('<div class="topicCard" id="topicCard' + index + '">' +
                             '<h3>'+ topic.topicName + '</h3>' +
                             '<p>' + topic.postingUser + '</p>' +
-                            '<button>'+ "Go" +'</button>' +
+                            '<button class="topicButton" data-topic="' + topic.topicName + '">Join</button>' +
                          '</div>');
 
-         // Append the topic card to the topicCards container
-     $('#topicCards').append(topicCard);
+        $('#topicCards').append(topicCard);
         
-    // Apply CSS to style the grid layout
-    $('#topicCards').css({
-        'display': 'grid',
-        'grid-template-columns': 'repeat(8, 1fr)', // 4 columns
-        'grid-template-rows': 'repeat(3, 1fr)',    // 3 rows
-        'gap': '20px',                              // Gap between cards
-        'padding': '60px',
+        $('#topicCards').css({
+            'display': 'grid',
+            'grid-template-columns': 'repeat(8, 1fr)',
+            'grid-template-rows': 'repeat(3, 1fr)',
+            'gap': '20px',
+            'padding': '60px',
+        });
+
+        $('.topicCard').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.2)',
+            'padding': '20px',
+            'border-radius': '5px',
+        });
+
+        $('.topicCard').hover(
+            function() {
+                $(this).css('transform', 'scale(1.1)');
+            },
+            function() {
+                $(this).css('transform', 'scale(1)');
+            }
+        );
     });
 
-    $('.topicCard').css({
-        'box-shadow': '0 0 10px rgba(0, 0, 0, 0.2)', // Border shadow
-        'padding': '20px' // Padding around the grid
-    });
+    $('.topicButton').click(function() {
+        var topicName = $(this).data('topic');
+        window.location.href = '/topic/' + encodeURIComponent(topicName);
     });
 }

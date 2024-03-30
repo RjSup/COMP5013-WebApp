@@ -3,7 +3,7 @@
 #* ====================
 import os
 import time
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import sqlite3
 import hashlib
@@ -74,6 +74,7 @@ def add_admin():
     else:
         return "Why are you here?"
 
+
 # Authenticate user
 def authUser(username, password):
     conn = sqlite3.connect('debate.sqlite')
@@ -88,6 +89,7 @@ def authUser(username, password):
             return User(user[0])
     return None
 
+
 # Check if user is admin
 def isAdmin():
     if current_user.is_authenticated:
@@ -99,9 +101,11 @@ def isAdmin():
         return isAdmin
     return False
 
+
 # Hash the user password
 def hash(password):
     return hashlib.sha256(password.encode()).hexdigest()
+
 
 #* ====================
 #* ROUTES
@@ -111,12 +115,15 @@ def hash(password):
 @login_required
 def logout():
     logout_user()
+    session.pop('logged_in', None)
     return redirect("/")
+
 
 # Landing page route
 @app.route("/")
 def landingPage():
     return render_template('landing.html')
+
 
 # Signup page route
 @app.route("/signup", methods=["POST"])
@@ -130,6 +137,7 @@ def signup():
     else:
         return "Please sign up"
 
+
 # Login route
 @app.route("/login", methods=["POST"])
 def login():
@@ -140,19 +148,24 @@ def login():
         user = authUser(username, password)
         if user:
             login_user(user)
+            session['logged_in'] = True
             return "login successful"
         else:
             return "login failed"
     else:
         return "Please log in"
 
+
 # Check if user is logged in
 @app.route("/check-login")
 def checkLogin():
     if current_user.is_authenticated:
+        session['logged_in'] = True
         return jsonify({"logged_in": True, "is_admin": isAdmin()})
     else:
+        session.pop('logged_in', None)
         return jsonify({"logged_in": False})
+
 
 # Add topic route
 @app.route("/add_topic", methods=["POST"])
@@ -178,6 +191,7 @@ def add_topic():
     else:
         return "Please log in to add a topic"
 
+
 # Fetch topics route
 @app.route("/fetch_topics")
 def fetch_topics():
@@ -187,6 +201,15 @@ def fetch_topics():
     topics = [{'topicName': row[0], 'postingUser': row[1]} for row in c.fetchall()]
     conn.close()
     return jsonify({'topics': topics})
+
+
+# New route to handle topic pages
+@app.route("/topic/<topic_name>")
+def topic_page(topic_name):
+    checkLogin()
+    # Render the topic page with the specified topic name
+    return render_template('topic.html', topic_name=topic_name)
+
 
 # Start app
 if __name__ == "__main__":

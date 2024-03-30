@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='topics.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>{{ topic_name }}</title> <!-- Dynamically set the title -->
+</head>
+<body>
+    <nav>
+        <div class="title">
+            <a href="/">Conversely</a>
+        </div>
+        <div id="authLinks" class="auth-links">
+            {% if session.logged_in %}
+                <button><a href="#" id="logoutLink">Logout</a></button>
+            {% else %}
+                <button><a href="#" id="loginLink">Login</a></button>
+                <button><a href="#" id="signupLink">Sign Up</a></button>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div id="authForms"></div>
+
+    <div class="topicHeader">
+        <h1>{{ topic_name }}</h1> 
+    </div>
+
+    <div class="container">
+        <div id="topicCards">
+            <!-- Topic cards will be dynamically populated here -->
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='topic.js') }}"></script>
+</body>
+</html>
