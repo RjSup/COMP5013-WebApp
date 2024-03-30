@@ -211,7 +211,7 @@ function renderTopics(topics) {
         });
 
         $('.topicCard').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.2)',
+            'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
             'padding': '20px',
             'border-radius': '5px',
         });
@@ -219,6 +219,7 @@ function renderTopics(topics) {
         $('.topicCard').hover(
             function() {
                 $(this).css('transform', 'scale(1.1)');
+                
             },
             function() {
                 $(this).css('transform', 'scale(1)');
