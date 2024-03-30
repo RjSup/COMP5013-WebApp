@@ -79,3 +79,8 @@ nav {
 #signupForm, #signupUsername, #signupPassword, #signupSubmit{
     margin-bottom: 10px;
 }
+
+.topicHeader h1 {
+    text-align: center;
+    margin-top: 20px;
+}
