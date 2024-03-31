@@ -41,11 +41,12 @@ nav {
 
 .auth-form {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     background: rgba(196, 223, 223, 1);
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    padding-right: 3px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .auth-form a {
