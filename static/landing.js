@@ -196,7 +196,6 @@ function renderTopics(topics) {
     topics.forEach(function(topic, index) {
         var topicCard = $('<div class="topicCard" id="topicCard' + index + '">' +
                             '<h3>'+ topic.topicName + '</h3>' +
-                            '<p>' + topic.postingUser + '</p>' +
                             '<button class="topicButton" data-topic="' + topic.topicName + '">Join</button>' +
                          '</div>');
 
