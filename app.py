@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, redirect, jsonify, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import sqlite3
 import hashlib
+import textwrap
 from dotenv import load_dotenv
 #* ====================
 #* APP SET UP
@@ -246,19 +247,22 @@ def fetch_claims(topic_name):
 def add_claim():
     if request.method == "POST":
         if checkLogin():
-            topic_name = request.form.get('topic_name')  # Retrieve topic name from form data
+            topic_name = request.form.get('topic_name')
             claim_text = request.form.get("claimText")
             posting_user = current_user.id
             creation_time = int(time.time())
             update_time = creation_time
             
             if topic_name is None:
-                return "Topic name is missing", 400  # Bad request status code
+                return "Topic name is missing", 400
+            
+            # Make sure the claim text is not too long
+            wrapped_claim_text = "\n".join(textwrap.wrap(claim_text, width=50))
 
             conn = connectDB()
             c = conn.cursor()
             c.execute("INSERT INTO claim (topic, postingUser, creationTime, updateTime, text) VALUES (?, ?, ?, ?, ?)",
-                      (topic_name, posting_user, creation_time, update_time, claim_text))
+                      (topic_name, posting_user, creation_time, update_time, wrapped_claim_text))
             conn.commit()
             conn.close()
             return "success"

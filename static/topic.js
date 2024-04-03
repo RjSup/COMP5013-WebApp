@@ -181,32 +181,48 @@ function fetchClaims(topicName) {
 }
 
 function renderClaims(claims) {
-    $('#card-grid').empty(); // Select the card grid container
+    $('#card-grid').empty(); // Clear the card grid container
 
-    claims.forEach(function(claim) {
+    // Iterate over the claims and create a card for each claim
+    claims.forEach(function(claim, index) {
+        // Create a new card element
         var claimElement = $('<div class="card">' +
-            '<h2>' + claim.claimText + '</h2>' +
+            '<p>' + claim.claimText + '<p>' +
             '<p>Posting User: ' + claim.postingUser + '</p>' +
             '</div>');
-        $('#card-grid').append(claimElement); // Append to the card grid container
 
+        // Append the card to the card grid container
+        $('#card-grid').append(claimElement);
+
+        // Add styling to create a grid layout
         $('#card-grid').css({
             'display': 'grid',
-            'grid-template-columns': 'repeat(8, 1fr)',
+            'grid-template-columns': 'repeat(3, 1fr)',
             'grid-template-rows': 'repeat(3, 1fr)',
             'gap': '40px',
-            'padding': '60px',
+            'padding': '20px',
         });
 
-        $('#card-grid').css({
-            'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
+        // Add additional styling to each card
+        claimElement.css({
+            'background-color': 'white',
+            'border-radius': '8px',
             'padding': '20px',
-            'border-radius': '5px',
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.1)',
         });
+
+        claimElement.hover(
+            function() {
+                $(this).css('transform', 'scale(1.01)');
+            },
+            function() {
+                $(this).css('transform', 'scale(1)');
+            }
+        );
+
     });
-    // Add clearfix to clear float and maintain layout
-    $('.card-grid').append('<div class="clearfix"></div>');
 }
+
 
 
 function addClaim(topicName, claimText, postingUser) {

@@ -32,12 +32,12 @@
     <input type="hidden" id="currentUserId" value="{{ current_user.id }}">
 
     <div class="addClaimForm" data-topic="{% if topic_name %}{{ topic_name }}{% endif %}">
-        <h2>Add Claim</h2>
-        <form id="addClaimForm">
-            <input type="text" placeholder="Claim Name" />
+        {% if session.logged_in %}
             <textarea id="claimText" placeholder="Claim Text (maximum 250 characters)" maxlength="250" required></textarea>
-            <button type="submit">Add Claim</button>
-        </form>
+            <button id="addClaimButton">Add</button>
+        {% else %}
+            <p>Log in to add a claim</p>
+        {% endif %}
     </div>
 
     <div class="container">
