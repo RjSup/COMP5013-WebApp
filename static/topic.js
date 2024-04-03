@@ -1,5 +1,7 @@
 $(document).ready(function() {
     checkLoggedIn(); // Check if user is logged in
+    var topicName = decodeURIComponent(window.location.href.split('/').pop()); // Get the topic name from URL
+    $('#topicName').text(topicName); // Set the topic name in the header
    
     // Add event listener for login link
     $(document).on('click', '#loginLink', function(e) {
@@ -134,3 +136,76 @@ $(document).ready(function() {
         });
     }
 });
+
+$(document).on('submit', '#addClaimForm', function(event) {
+    event.preventDefault();
+    var claimText = $('#claimText').val().trim(); // Trim leading and trailing whitespace
+    var postingUser = $('#currentUserId').val(); // Get the ID of the current user
+    var topicName = $('.addClaimForm').data('topic'); // Retrieve topic name from data attribute
+
+    // Check if user is logged in
+    $.ajax({
+        url: '/check-login',
+        type: 'GET',
+        success: function(response) {
+            if (response.logged_in) {
+                // Perform additional checks on the claim text before sending it to the server, if necessary
+                
+                // Call the addClaim function
+                addClaim(topicName, claimText, postingUser);
+            } else {
+                showLoginForm();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+});
+
+
+
+function fetchClaims(topicName) {
+    $.ajax({
+        type: 'GET',
+        url: '/fetch_claims?topic=' + topicName,
+        success: function(response) {
+            renderClaims(response.claims);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+}
+
+function renderClaims(claims) {
+    $('#claimsContainer').empty();
+
+    claims.forEach(function(claim) {
+        var claimElement = $('<div class="claim">' +
+            '<p>' + claim.text + '</p>' +
+            '<p>Posting User: ' + claim.postingUser + '</p>' +
+            '</div>');
+        $('#claimsContainer').append(claimElement);
+    });
+}
+
+function addClaim(topicName, claimText, postingUser) {
+    $.ajax({
+        url: '/add_claim',
+        type: 'POST',
+        data: {
+            topic_name: topicName, // Correct parameter name
+            claimText: claimText,
+            postingUser: postingUser
+        },
+        success: function(response) {
+            fetchClaims(topicName);
+            $('#claimText').val('');
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+}
+

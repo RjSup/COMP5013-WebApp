@@ -37,6 +37,14 @@ class User(UserMixin):
 def load_user(user_id):
     return User(user_id)
 
+
+def connectDB():
+    conn = sqlite3.connect('debate.sqlite')
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    return conn
+
+
 global isAdmin
 
 #* ====================
@@ -53,8 +61,7 @@ def addUser(username, password, isAdmin):
     # Users shouldn't be admins
     isAdmin = False
     # Connect to the database
-    conn = sqlite3.connect('debate.sqlite')
-    # Create a cursor object
+    conn = connectDB()
     c = conn.cursor()
     # Insert the user into the database
     c.execute("INSERT INTO user (userName, passwordHash, isAdmin, creationTime, lastVisit) VALUES (?, ?, ?, ?, ?)",
@@ -82,7 +89,8 @@ def add_admin():
 
 # Authenticate user
 def authUser(username, password):
-    conn = sqlite3.connect('debate.sqlite')
+      # Connect to the database
+    conn = connectDB()
     c = conn.cursor()
     c.execute("SELECT * FROM user WHERE userName = ?", (username,))
     user = c.fetchone()
@@ -98,7 +106,8 @@ def authUser(username, password):
 # Check if user is admin
 def isAdmin():
     if current_user.is_authenticated:
-        conn = sqlite3.connect('debate.sqlite')
+          # Connect to the database
+        conn = connectDB()
         c = conn.cursor()
         c.execute("SELECT isAdmin FROM user WHERE userID = ?", (current_user.id,))
         isAdmin = c.fetchone()[0]
@@ -184,7 +193,8 @@ def add_topic():
             # Use the current time as the last visit time
             updateTime = creationTime
             # Connect to the database
-            conn = sqlite3.connect('debate.sqlite')
+              # Connect to the database
+            conn = connectDB()
             c = conn.cursor()
             c.execute("INSERT INTO topic (topicName, postingUser, creationTime, updateTime) VALUES (?, ?, ?, ?)",
                       (topicName, postingUser, creationTime, updateTime))
@@ -200,7 +210,8 @@ def add_topic():
 # Fetch topics route
 @app.route("/fetch_topics")
 def fetch_topics():
-    conn = sqlite3.connect('debate.sqlite')
+      # Connect to the database
+    conn = connectDB()
     c = conn.cursor()
     c.execute("SELECT topic.topicName, user.userName FROM topic JOIN user ON topic.postingUser = user.userID")
     topics = [{'topicName': row[0], 'postingUser': row[1]} for row in c.fetchall()]
@@ -214,6 +225,46 @@ def topic_page(topic_name):
     checkLogin()
     # Render the topic page with the specified topic name
     return render_template('topic.html', topic_name=topic_name)
+
+
+@app.route("/fetch_claims", methods=["GET"])
+def fetch_claims():
+    topic_name = request.args.get('topic_name')
+    # Connect to the database
+    conn = connectDB()
+    c = conn.cursor()
+    c.execute("SELECT postingUser, text FROM claim WHERE topic = ?", (topic_name,))
+    claims = [{'postingUser': row['postingUser'], 'claimText': row['claimText']} for row in c.fetchall()]
+    conn.close()
+    return jsonify({'claims': claims})
+
+
+@app.route("/add_claim", methods=["POST"])
+@login_required
+def add_claim():
+    if request.method == "POST":
+        if checkLogin():
+            topic_name = request.form.get('topic_name')  # Retrieve topic name from form data
+            claim_text = request.form.get("claimText")
+            posting_user = current_user.id
+            creation_time = int(time.time())
+            update_time = creation_time
+            
+            if topic_name is None:
+                return "Topic name is missing", 400  # Bad request status code
+
+            conn = connectDB()
+            c = conn.cursor()
+            c.execute("INSERT INTO claim (topic, postingUser, creationTime, updateTime, text) VALUES (?, ?, ?, ?, ?)",
+                      (topic_name, posting_user, creation_time, update_time, claim_text))
+            conn.commit()
+            conn.close()
+            return "success"
+        else:
+            return "Please log in to add a claim"
+    else:
+        return "Invalid request method"
+
 
 
 # Start app

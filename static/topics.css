@@ -84,3 +84,50 @@ nav {
     text-align: center;
     margin-top: 20px;
 }
+
+.addClaimForm {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.addClaimForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.addClaimForm input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.addClaimForm button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addClaimForm button:hover {
+    background: #0056b3;
+}
+
+.addClaimForm textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 100px; /* Set minimum height */
+    max-height: 200px; /* Set maximum height */
+}

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='topics.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <title>Conversely | {{ topic_name }}</title> <!-- Dynamically set the title -->
+    <title>Conversely | {{ topic_name }}</title>
 </head>
 <body>
     <nav>
@@ -29,11 +29,23 @@
         <h1>{{ topic_name }}</h1> 
     </div>
 
+    <input type="hidden" id="currentUserId" value="{{ current_user.id }}">
+
     <div class="container">
         <div id="topicCards">
             <!-- Topic cards will be dynamically populated here -->
         </div>
     </div>
+
+    <div class="addClaimForm" data-topic="{{topic_name}}">
+        <h2>Add Claim</h2>
+        <form id="addClaimForm">
+            <input type="text" placeholder="Claim Name" />
+            <textarea id="claimText" placeholder="Claim Text (maximum 250 characters)" maxlength="250" required></textarea>
+            <button type="submit">Add Claim</button>
+        </form>
+    </div>
+    
 
     <script src="{{ url_for('static', filename='topic.js') }}"></script>
 </body>
