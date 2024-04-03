@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='topics.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <title>Conversely | {{ topic_name }}</title>
+    <title>Conversely | {% if topic_name %}{{ topic_name }}{% else %}Topic Name{% endif %}</title>
 </head>
 <body>
     <nav>
@@ -26,18 +26,12 @@
     <div id="authForms"></div>
 
     <div class="topicHeader">
-        <h1>{{ topic_name }}</h1> 
+        <h1>{% if topic_name %}{{ topic_name }}{% else %}Topic Name{% endif %}</h1> 
     </div>
 
     <input type="hidden" id="currentUserId" value="{{ current_user.id }}">
 
-    <div class="container">
-        <div id="topicCards">
-            <!-- Topic cards will be dynamically populated here -->
-        </div>
-    </div>
-
-    <div class="addClaimForm" data-topic="{{topic_name}}">
+    <div class="addClaimForm" data-topic="{% if topic_name %}{{ topic_name }}{% endif %}">
         <h2>Add Claim</h2>
         <form id="addClaimForm">
             <input type="text" placeholder="Claim Name" />
@@ -45,7 +39,12 @@
             <button type="submit">Add Claim</button>
         </form>
     </div>
-    
+
+    <div class="container">
+        <div id="card-grid">
+            <!-- Claims will be rendered here -->
+        </div>
+    </div>
 
     <script src="{{ url_for('static', filename='topic.js') }}"></script>
 </body>

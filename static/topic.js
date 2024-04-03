@@ -1,7 +1,11 @@
 $(document).ready(function() {
     checkLoggedIn(); // Check if user is logged in
-    var topicName = decodeURIComponent(window.location.href.split('/').pop()); // Get the topic name from URL
-    $('#topicName').text(topicName); // Set the topic name in the header
+    // Get the topic name from the HTML content
+    var topicName = document.title.split(' | ')[1].trim();
+    // Set the topic name in the header
+    $('.topicHeader h1').text(topicName);
+    // Fetch claims for the topic
+    fetchClaims(topicName);
    
     // Add event listener for login link
     $(document).on('click', '#loginLink', function(e) {
@@ -163,12 +167,10 @@ $(document).on('submit', '#addClaimForm', function(event) {
     });
 });
 
-
-
 function fetchClaims(topicName) {
     $.ajax({
         type: 'GET',
-        url: '/fetch_claims?topic=' + topicName,
+        url: '/fetch_claims/' + topicName, // Update the URL to include the topic name
         success: function(response) {
             renderClaims(response.claims);
         },
@@ -179,16 +181,33 @@ function fetchClaims(topicName) {
 }
 
 function renderClaims(claims) {
-    $('#claimsContainer').empty();
+    $('#card-grid').empty(); // Select the card grid container
 
     claims.forEach(function(claim) {
-        var claimElement = $('<div class="claim">' +
-            '<p>' + claim.text + '</p>' +
+        var claimElement = $('<div class="card">' +
+            '<h2>' + claim.claimText + '</h2>' +
             '<p>Posting User: ' + claim.postingUser + '</p>' +
             '</div>');
-        $('#claimsContainer').append(claimElement);
+        $('#card-grid').append(claimElement); // Append to the card grid container
+
+        $('#card-grid').css({
+            'display': 'grid',
+            'grid-template-columns': 'repeat(8, 1fr)',
+            'grid-template-rows': 'repeat(3, 1fr)',
+            'gap': '40px',
+            'padding': '60px',
+        });
+
+        $('#card-grid').css({
+            'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
+            'padding': '20px',
+            'border-radius': '5px',
+        });
     });
+    // Add clearfix to clear float and maintain layout
+    $('.card-grid').append('<div class="clearfix"></div>');
 }
+
 
 function addClaim(topicName, claimText, postingUser) {
     $.ajax({

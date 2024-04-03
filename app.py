@@ -227,16 +227,18 @@ def topic_page(topic_name):
     return render_template('topic.html', topic_name=topic_name)
 
 
-@app.route("/fetch_claims", methods=["GET"])
-def fetch_claims():
-    topic_name = request.args.get('topic_name')
+# Update the route for fetching claims to accept the topic name
+@app.route("/fetch_claims/<topic_name>")
+def fetch_claims(topic_name):
     # Connect to the database
     conn = connectDB()
     c = conn.cursor()
-    c.execute("SELECT postingUser, text FROM claim WHERE topic = ?", (topic_name,))
-    claims = [{'postingUser': row['postingUser'], 'claimText': row['claimText']} for row in c.fetchall()]
+    c.execute("SELECT claim.topic, claim.postingUser, claim.text FROM claim JOIN topic ON claim.topic = topic.topicName WHERE topic.topicName = ?", (topic_name,))
+    claims = [{'topic': row[0], 'postingUser': row[1], 'claimText': row[2]} for row in c.fetchall()]
     conn.close()
     return jsonify({'claims': claims})
+
+
 
 
 @app.route("/add_claim", methods=["POST"])
