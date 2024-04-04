@@ -1,29 +1,26 @@
 * {
     margin: 0;
-    padding: 0;
     box-sizing: border-box;
-}
-.auth-form {
-    display: none;
 }
 
 nav {
-    background: rgba(196, 223, 223, 1);
-    color: #fff;
+    background: #1a202c;
+    color: #a0aec0;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .title a {
     font-size: 24px;
     text-decoration: none;
-    color: white;
+    color: #a0aec0;
     cursor: pointer;
 }
 
 .auth-links a {
-    color: #fff;
+    color: #a0aec0;
     text-decoration: none;
     margin-left: 10px;
 }
@@ -35,14 +32,14 @@ nav {
 .auth-form {
     display: flex;
     justify-content: flex-end;
-    background: rgba(196, 223, 223, 1);
+    background: #1a202c;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     padding-right: 3px;
 }
 
 .auth-form a {
-    color: #fff;
+    color: #a0aec0;
     text-decoration: none;
 }
 
@@ -56,27 +53,16 @@ nav {
     width: 10%; 
 }
 
-#loginForm {
+#loginForm, #signupForm {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding-right: 12px;
     padding-bottom: 10px;
     padding-top: 5px;
 }
 
-#loginForm, #loginUsername, #loginPassword, #loginSubmit{
-    margin-bottom: 10px;
-}
-
-#signupForm {
-    display: flex;
-    flex-direction: column;
-    padding-right: 12px;
-    padding-bottom: 10px;
-    padding-top: 5px;
-}
-
-#signupForm, #signupUsername, #signupPassword, #signupSubmit{
+#loginForm, #loginUsername, #loginPassword, #loginSubmit,
+#signupForm, #signupUsername, #signupPassword, #signupSubmit {
     margin-bottom: 10px;
 }
 
@@ -99,7 +85,7 @@ nav {
     margin-bottom: 20px;
 }
 
-.addClaimForm input[type="text"] {
+.addClaimForm input[type="text"], .addClaimForm textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -110,25 +96,19 @@ nav {
 .addClaimForm button {
     width: 100%;
     padding: 10px;
-    background: #007bff;
-    color: #fff;
+    background: #1a202c;
+    color: #a0aec0;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .addClaimForm button:hover {
-    background: #0056b3;
+    background: #2d3748;
 }
 
 .addClaimForm textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
     resize: vertical; /* Allow vertical resizing */
     min-height: 100px; /* Set minimum height */
     max-height: 200px; /* Set maximum height */
 }
-

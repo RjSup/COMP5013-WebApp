@@ -1,8 +1,16 @@
 /** Reset CSS */
 * {
     margin: 0;
+    box-sizing: border-box;
 }
+
 /** General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background: #f4f4f4;
+}
+
 #landing {
     height: 100vh;
     display: flex;
@@ -10,27 +18,23 @@
 }
 
 /** Navbar Styles */
-.auth-form {
-    display: none;
-}
-
 nav {
-    background: rgba(196, 223, 223, 1);
-    color: #fff;
-    padding: 15px 20px 15px 20px;
+    background: #1a202c;
+    color: #a0aec0;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .title a {
     font-size: 24px;
     text-decoration: none;
-    color: white;
-    cursor: pointer;
+    color: #a0aec0;
 }
 
 .auth-links a {
-    color: #fff;
+    color: #a0aec0;
     text-decoration: none;
     margin-left: 10px;
 }
@@ -39,74 +43,50 @@ nav {
     text-decoration: underline;
 }
 
-#signupLink {
-    color: #fff;
-    text-decoration: none;
-    margin-right: 25px;
-}
-
-#loginLink {
-    color: #fff;
+#signupLink, #loginLink {
+    color: #a0aec0;
     text-decoration: none;
     margin-right: 10px;
 }
 
+/** Dropdown Form Styles */
+.dropdown-form {
+    display: none;
+    position: absolute;
+    background-color: #1a202c;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-form a {
+    color: #a0aec0;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
 .auth-form {
     display: flex;
-    justify-content: center;
-    background: rgba(196, 223, 223, 1);
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-    padding-right: 10px;
-    padding-left: 10px;
-}
-
-.auth-form a {
-    color: #fff;
-    text-decoration: none;
-}
-
-#authForms {
-    position: absolute;
-    top: 6%;
-    right: 0;
-    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     flex-direction: column;
-    align-items: flex-end;
-    width: 10%; 
+    height: 100vh;
+    padding: 20px;
 }
 
-#loginForm {
-    display: flex;
-    flex-direction: column;
-    padding-right: 12px;
-    padding-bottom: 10px;
-    padding-top: 5px;
-}
-
-#loginForm, #loginUsername, #loginPassword, #loginSubmit{
-    margin-bottom: 10px;
-}
-
-#signupForm {
-    display: flex;
-    flex-direction: column;
-    padding-right: 12px;
-    padding-bottom: 10px;
-    padding-top: 5px;
-}
-
-#signupForm, #signupUsername, #signupPassword, #signupSubmit{
-    margin-bottom: 10px;
+.dropdown-form a:hover {
+    background-color: #2d3748;
 }
 
 /** Main Content Styles */
 .container {
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
     height: 25vh;
+    padding: 20px;
 }
 
 .container h1 {
@@ -119,29 +99,31 @@ nav {
 /* TOPICS SECTION */
 .topicCarousel {
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
     height: 75vh;
     padding: 20px;
 }
 
-
 footer {
     color: black;
     padding: 3px 20px;
     display: flex;
     justify-content: center;
-    justify-self: end;
+    background: #1a202c;
+    color: #a0aec0;
 }
 
 #topicCards button {
-    background: rgba(196, 223, 223, 1);
+    background: #1a202c;
+    color: #a0aec0;
     padding: 5px;
     border-radius: 5px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 #topicCards h3 {
-    padding-top: 100px;;
+    padding-top: 100px;
 }

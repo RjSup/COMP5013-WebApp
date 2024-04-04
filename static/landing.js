@@ -217,11 +217,17 @@ function renderTopics(topics) {
 
         $('.topicCard').hover(
             function() {
-                $(this).css('transform', 'scale(1.1)');
-                
+                $(this).css({
+                    'transform': 'scale(1.01)',
+                    'border': '2px solid',
+                    'border-color': 'rgba(255, 246, 143, 1)'
+                });
             },
             function() {
-                $(this).css('transform', 'scale(1)');
+                $(this).css({
+                    'transform': 'scale(1)',
+                    'border': 'none'
+                });
             }
         );
     });
