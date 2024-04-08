@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    // test ready function
+    console.log('Document is ready');
     checkLoggedIn(); // Check if user is logged in
     // Get the topic name from the HTML content
     var topicName = document.title.split(' | ')[1].trim();
@@ -10,18 +12,24 @@ $(document).ready(function() {
     // Add event listener for login link
     $(document).on('click', '#loginLink', function(e) {
         e.preventDefault();
+        // test login link click
+        console.log('Login link clicked');
         showLoginForm();
     });
 
     // Add event listener for signup link
     $(document).on('click', '#signupLink', function(e) {
         e.preventDefault();
+        // test signup link click
+        console.log('Signup link clicked');
         showSignupForm();
     });
 
     // Add event listener for logout link
     $(document).on('click', '#logoutLink', function(e) {
         e.preventDefault();
+        // test logout link click
+        console.log('Logout link clicked');
         logout();
     });
 
@@ -36,6 +44,8 @@ $(document).ready(function() {
         `);
         $('#loginForm').submit(function(e) {
             e.preventDefault();
+            // test login form submission
+            console.log('Login form submitted');
             var username = $('#loginUsername').val();
             var password = $('#loginPassword').val();
             login(username, password);
@@ -53,6 +63,8 @@ $(document).ready(function() {
         `);
         $('#signupForm').submit(function(e) {
             e.preventDefault();
+            // test signup form submission
+            console.log('Signup form submitted');
             var username = $('#signupUsername').val();
             var password = $('#signupPassword').val();
             signup(username, password);
@@ -69,12 +81,17 @@ $(document).ready(function() {
                 password: password
             },
             success: function(response) {
+                // test login success
+                console.log('Login success:', response);
                 alert(response);
                 //window.location.href = '/';
                 checkLoggedIn();
             },
             error: function(xhr, status, error) {
+                // check for any errors
+                console.error("Error:", error);
                 alert("Error: " + error);
+                
             }
         });
     }
@@ -89,11 +106,15 @@ $(document).ready(function() {
                 password: password
             },
             success: function(response) {
+                // test signup success
+                console.log('Signup success:', response);
                 alert(response);
                 window.location.href = '/';
                 checkLoggedIn();
             },
             error: function(xhr, status, error) {
+                // check for any errors
+                console.error("Error:", error);
                 alert("Error: " + error);
             }
         });
@@ -105,6 +126,8 @@ $(document).ready(function() {
             type: 'GET',
             url: '/check-login',
             success: function(response) {
+                // test check login success
+                console.log('Check login success:', response);
                 if (response.logged_in) {
                     $('#authLinks').html(`<a id="logoutLink" href="#">Logout</a>`);
                     if (response.is_admin) {
@@ -132,9 +155,13 @@ $(document).ready(function() {
             type: 'POST',
             url: '/logout',
             success: function(response) {
+                // test logout success
+                console.log('Logout success:', response);
                 checkLoggedIn();
             },
             error: function(xhr, status, error) {
+                // check for any errors
+                console.error("Error:", error);
                 alert("Error: " + error);
             }
         });
@@ -152,6 +179,8 @@ $(document).on('submit', '#addClaimForm', function(event) {
         url: '/check-login',
         type: 'GET',
         success: function(response) {
+            // Check if the user is logged in
+            console.log('Check login:', response);
             if (response.logged_in) {
                 // Perform additional checks on the claim text before sending it to the server, if necessary
                 
@@ -162,6 +191,7 @@ $(document).on('submit', '#addClaimForm', function(event) {
             }
         },
         error: function(xhr, status, error) {
+            // Handle errors with the check-login request
             console.error("Error:", error);
         }
     });
@@ -172,6 +202,8 @@ function fetchClaims(topicName) {
         type: 'GET',
         url: '/fetch_claims/' + topicName, // Update the URL to include the topic name
         success: function(response) {
+            // xheck the response from the server
+            console.log('Fetch claims response:', response);
             renderClaims(response.claims);
         },
         error: function(xhr, status, error) {
@@ -242,10 +274,13 @@ function addClaim(topicName, claimText, postingUser) {
             postingUser: postingUser
         },
         success: function(response) {
+            // test add claim success
+            console.log('Add claim success:', response);
             fetchClaims(topicName);
             $('#claimText').val('');
         },
         error: function(xhr, status, error) {
+            // check for any errors
             console.error("Error:", error);
         }
     });

@@ -1,22 +1,30 @@
 $(document).ready(function() {
+    // test ready function
+    console.log('Document is ready');
     checkLoggedIn(); // Check if user is logged in
     getTopics(); // Get topics from the database
    
     // Add event listener for login link
     $(document).on('click', '#loginLink', function(e) {
         e.preventDefault();
+        // test login link click
+        console.log('Login link clicked');
         showLoginForm();
     });
 
     // Add event listener for signup link
     $(document).on('click', '#signupLink', function(e) {
         e.preventDefault();
+        // test signup link click
+        console.log('Signup link clicked');
         showSignupForm();
     });
 
     // Add event listener for logout link
     $(document).on('click', '#logoutLink', function(e) {
         e.preventDefault();
+        // test logout link click
+        console.log('Logout link clicked');
         logout();
     });
 
@@ -30,13 +38,18 @@ $(document).ready(function() {
             url: '/check-login',
             type: 'GET',
             success: function(response) {
+                // test check login success
+                console.log('Check login success:', response); 
                 if (response.logged_in) {
                     addTopic(topicName, postingUser);
                 } else {
+                    // test check login failure
+                    console.log('Not logged in:', response);
                     showLoginForm();
                 }
             },
             error: function(xhr, status, error) {
+                // check for any errors
                 console.error("Error:", error);
             }
         });
@@ -53,6 +66,8 @@ function showLoginForm() {
     `);
     $('#loginForm').submit(function(e) {
         e.preventDefault();
+        // test login form submit
+        console.log('Login form submitted');
         var username = $('#loginUsername').val();
         var password = $('#loginPassword').val();
         login(username, password);
@@ -69,6 +84,8 @@ function showSignupForm() {
     `);
     $('#signupForm').submit(function(e) {
         e.preventDefault();
+        // test signup form submit
+        console.log('Signup form submitted');
         var username = $('#signupUsername').val();
         var password = $('#signupPassword').val();
         signup(username, password);
@@ -84,11 +101,15 @@ function login(username, password) {
             password: password
         },
         success: function(response) {
+            // test login success
+            console.log('Login success:', response);
             alert(response);
             window.location.href = '/';
             checkLoggedIn();
         },
         error: function(xhr, status, error) {
+            // check for errors with login
+            console.error("Error:", error);
             alert("Error: " + error);
         }
     });
@@ -103,11 +124,15 @@ function signup(username, password) {
             password: password
         },
         success: function(response) {
+            // test signup success 
+            console.log('Signup success:', response);
             alert(response);
             window.location.href = '/';
             checkLoggedIn();
         },
         error: function(xhr, status, error) {
+            // check for errors with signup
+            console.error("Error:", error);
             alert("Error: " + error);
         }
     });
@@ -118,6 +143,8 @@ function checkLoggedIn() {
         type: 'GET',
         url: '/check-login',
         success: function(response) {
+            // test check login success
+            console.log('Check login success:', response);
             if (response.logged_in) {
                 $('#authLinks').html(`<a id="logoutLink" href="#">Logout</a>`);
                 if (response.is_admin) {
@@ -144,9 +171,13 @@ function logout() {
         type: 'POST',
         url: '/logout',
         success: function(response) {
+            // test logout success
+            console.log('Logout success:', response);
             checkLoggedIn();
         },
         error: function(xhr, status, error) {
+            // check for errors with logout
+            console.error("Error:", error);
             alert("Error: " + error);
         }
     });
@@ -161,6 +192,8 @@ function addTopic(topicName, postingUser) {
             postingUser: postingUser
         },
         success: function(response) {
+            // test add topic success
+            console.log('Add topic success:', response);
             getTopics();
             $('#topicCards').append('<div class="topicCard">' +
                 '<h3>' + topicName + '</h3>' +
@@ -182,6 +215,8 @@ function getTopics() {
         type: 'GET',
         url: '/fetch_topics',
         success: function(response) {
+            // test fetch topics success
+            console.log('Fetch topics success:', response);
             renderTopics(response.topics);
         },
         error: function(xhr, status, error) {
