@@ -156,7 +156,7 @@ $(document).ready(function() {
             url: '/logout',
             success: function(response) {
                 // test logout success
-                console.log('Logout success:', response);
+                console.log('Logout success:');
                 checkLoggedIn();
             },
             error: function(xhr, status, error) {
