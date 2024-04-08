@@ -60,7 +60,10 @@ def addUser(username, password, isAdmin):
     # Use the current time as the last visit time
     lastVisit = creationTime
     # Users shouldn't be admins
-    isAdmin = False
+    if isAdmin:
+        isAdmin = True
+    else:
+        isAdmin = False
     # Connect to the database
     conn = connectDB()
     c = conn.cursor()
@@ -113,7 +116,7 @@ def isAdmin():
         c.execute("SELECT isAdmin FROM user WHERE userID = ?", (current_user.id,))
         isAdmin = c.fetchone()[0]
         conn.close()
-        return isAdmin
+        return bool(isAdmin)
     return False
 
 
@@ -270,7 +273,6 @@ def add_claim():
             return "Please log in to add a claim"
     else:
         return "Invalid request method"
-
 
 
 # Start app
