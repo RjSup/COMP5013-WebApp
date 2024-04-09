@@ -42,7 +42,7 @@ def load_user(user_id):
 def connectDB():
     conn = sqlite3.connect('debate.sqlite')
     conn.row_factory = sqlite3.Row
-    c = conn.cursor()
+    # c = conn.cursor()
     return conn
 
 
