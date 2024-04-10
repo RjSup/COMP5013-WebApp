@@ -229,12 +229,13 @@ function renderClaims(claims) {
             'border-radius': '8px',
             'padding': '20px',
             'box-shadow': '0 0 10px rgba(0, 0, 0, 0.1)',
+            'cursor': 'pointer'
         });
 
         claimElement.hover(
             function() {
                 $(this).css({
-                    'transform': 'scale(1.001)',
+                    'transform': 'scale(1.01)',
                     'border': '2px solid',
                     'border-color': 'rgba(255, 246, 143, 1)'
                 });
@@ -249,3 +250,26 @@ function renderClaims(claims) {
 
     });
 }
+
+// Event listener for claim click to show claim details popup
+$(document).on('click', '.card', function() {
+    var claimText = $(this).find('p:first').text();
+    $('#claimDetail').text(claimText);
+    $('#claimModal').css('display', 'block');
+});
+
+// Close the claim details popup when the close button or outside area is clicked
+$('.close, .modal').on('click', function(event) {
+    if (event.target === this) {
+        $('#claimModal').css('display', 'none');
+    }
+});
+
+// Submit reply form
+$(document).on('submit', '#replyForm', function(event) {
+    event.preventDefault();
+    var replyText = $('#replyText').val().trim();
+    var replyType = $('input[name="replyType"]:checked').val();
+    var claimText = $('#claimDetail').text(); // Retrieve claim details from the popup
+
+});

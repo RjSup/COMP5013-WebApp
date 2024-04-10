@@ -255,7 +255,7 @@ function renderTopics(topics) {
                 $(this).css({
                     'transform': 'scale(1.001)',
                     'border': '2px solid',
-                    'border-color': 'rgba(255, 246, 143, 1)'
+                    'border-color': 'rgba(255, 246, 143, 1)',
                 });
             },
             function() {

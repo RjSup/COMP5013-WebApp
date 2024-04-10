@@ -15,10 +15,10 @@
         </div>
         <div id="authLinks" class="auth-links">
             {% if session.logged_in %}
-                <button><a href="#" id="logoutLink">Logout</a></button>
+                <button id="btn"><a href="#" id="logoutLink">Logout</a></button>
             {% else %}
-                <button><a href="#" id="loginLink">Login</a></button>
-                <button><a href="#" id="signupLink">Sign Up</a></button>
+                <button id="btn"><a href="#" id="loginLink">Login</a></button>
+                <button id="btn"><a href="#" id="signupLink">Sign Up</a></button>
             {% endif %}
         </div>
     </nav>
@@ -45,6 +45,24 @@
          
         </div>
     </div>
+
+        <!-- Popup modal structure -->
+    <div id="claimModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Claim Details</h2>
+            <p id="claimDetail"></p>
+            <form id="replyForm">
+                <textarea id="replyText" placeholder="Your reply..." required></textarea>
+                <input class="in" type="radio" id="forReply" name="replyType" value="for" required>
+                <label for="forReply">For</label>
+                <input class="in" type="radio" id="againstReply" name="replyType" value="against" required>
+                <label for="againstReply">Against</label>
+                <button id="btn2" type="submit">Submit Reply</button>
+            </form>
+        </div>
+    </div>
+
 
     <script src="{{ url_for('static', filename='topic.js') }}"></script>
 </body>
