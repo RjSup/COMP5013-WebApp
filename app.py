@@ -31,6 +31,19 @@ def connectDB():
 # ====================
 # FUNCTIONS
 # ====================
+# Check if the user is an admin based on the database
+def isAdmin(request):
+    if 'logged_in' in session:
+        user_id = session.get('user_id')
+        if user_id:
+            conn = connectDB()
+            c = conn.cursor()
+            c.execute("SELECT isAdmin FROM user WHERE userID = ?", (user_id,))
+            user_data = c.fetchone()
+            conn.close()
+            if user_data:
+                return bool(user_data[0])
+    return False
 
 # Add user to database
 def addUser(username, password, isAdmin):
@@ -67,21 +80,6 @@ def getUserId(request):
     if 'logged_in' in session:
         return session.get('user_id', None)
     return None
-
-
-# Check if the user is an admin based on the database
-def isAdmin(request):
-    if 'logged_in' in session:
-        user_id = session.get('user_id')
-        if user_id:
-            conn = connectDB()
-            c = conn.cursor()
-            c.execute("SELECT isAdmin FROM user WHERE userID = ?", (user_id,))
-            user_data = c.fetchone()
-            conn.close()
-            if user_data:
-                return bool(user_data[0])
-    return False
 
 
 # Hash the user password
