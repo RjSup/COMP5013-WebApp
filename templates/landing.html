@@ -34,7 +34,7 @@
         <div class="topicCarousel">
             {% if session.logged_in %}
                 <form id="addTopicForm">
-                    <input type="text" id="topicName" placeholder="Topic Name" />
+                    <input type="text" id="topicName" placeholder="Topic Name" pattern="[a-zA-Z0-9\s]+" title="Please enter only letters, numbers, and spaces" required />
                     <button type="submit" id="addTopicBtn">Add Topic</button>
                 </form>
             {% endif %}
