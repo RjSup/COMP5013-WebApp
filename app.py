@@ -1,6 +1,6 @@
-#* ====================
-#* IMPORTS
-#* ====================
+# ====================
+# IMPORTS
+# ====================
 import os
 import time
 from flask import Flask, render_template, request, redirect, jsonify, session
@@ -8,12 +8,10 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 import sqlite3
 import hashlib
 import textwrap
-from dotenv import load_dotenv
-#* ====================
-#* APP SET UP
-#* ====================
-load_dotenv()
 
+# ====================
+# APP SET UP
+# ====================
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
@@ -24,9 +22,10 @@ app.config.update(
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-#* ====================
-#* SETUP
-#* ====================
+
+# ====================
+# SETUP
+# ====================
 
 # User class for Flask-Login
 class User(UserMixin):
@@ -42,37 +41,26 @@ def load_user(user_id):
 def connectDB():
     conn = sqlite3.connect('debate.sqlite')
     conn.row_factory = sqlite3.Row
-    # c = conn.cursor()
     return conn
 
 
-global isAdmin
-
-#* ====================
-#* FUNCTIONS
-#* ====================
+# ====================
+# FUNCTIONS
+# ====================
 # Add user to database
 def addUser(username, password, isAdmin):
-    # Hash the user's password
     passwordHash = hash(password)
-    # Get the current time
     creationTime = int(time.time())
-    # Use the current time as the last visit time
     lastVisit = creationTime
-    # Users shouldn't be admins
     if isAdmin:
         isAdmin = True
     else:
         isAdmin = False
-    # Connect to the database
     conn = connectDB()
     c = conn.cursor()
-    # Insert the user into the database
     c.execute("INSERT INTO user (userName, passwordHash, isAdmin, creationTime, lastVisit) VALUES (?, ?, ?, ?, ?)",
               (username, passwordHash, isAdmin, creationTime, lastVisit))
-    # Commit the changes
     conn.commit()
-    # Close the connection
     conn.close()
 
 
@@ -93,7 +81,6 @@ def add_admin():
 
 # Authenticate user
 def authUser(username, password):
-      # Connect to the database
     conn = connectDB()
     c = conn.cursor()
     c.execute("SELECT * FROM user WHERE userName = ?", (username,))
@@ -110,7 +97,6 @@ def authUser(username, password):
 # Check if user is admin
 def isAdmin():
     if current_user.is_authenticated:
-          # Connect to the database
         conn = connectDB()
         c = conn.cursor()
         c.execute("SELECT isAdmin FROM user WHERE userID = ?", (current_user.id,))
@@ -125,9 +111,9 @@ def hash(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 
-#* ====================
-#* ROUTES
-#* ====================
+# ====================
+# ROUTES
+# ====================
 # Logout route
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
@@ -190,14 +176,11 @@ def checkLogin():
 @login_required
 def add_topic():
     if request.method == "POST":
-        if isAdmin():  # Check if the current user is an admin
+        if isAdmin():  
             topicName = request.form["topicName"]
             postingUser = current_user.id
             creationTime = int(time.time())
-            # Use the current time as the last visit time
             updateTime = creationTime
-            # Connect to the database
-              # Connect to the database
             conn = connectDB()
             c = conn.cursor()
             c.execute("INSERT INTO topic (topicName, postingUser, creationTime, updateTime) VALUES (?, ?, ?, ?)",
@@ -214,7 +197,6 @@ def add_topic():
 # Fetch topics route
 @app.route("/fetch_topics")
 def fetch_topics():
-      # Connect to the database
     conn = connectDB()
     c = conn.cursor()
     c.execute("SELECT topic.topicName, user.userName FROM topic JOIN user ON topic.postingUser = user.userID")
@@ -227,22 +209,18 @@ def fetch_topics():
 @app.route("/topic/<topic_name>")
 def topic_page(topic_name):
     checkLogin()
-    # Render the topic page with the specified topic name
     return render_template('topic.html', topic_name=topic_name)
 
 
 # Update the route for fetching claims to accept the topic name
 @app.route("/fetch_claims/<topic_name>")
 def fetch_claims(topic_name):
-    # Connect to the database
     conn = connectDB()
     c = conn.cursor()
     c.execute("SELECT claim.topic, claim.postingUser, claim.text FROM claim JOIN topic ON claim.topic = topic.topicName WHERE topic.topicName = ?", (topic_name,))
     claims = [{'topic': row[0], 'postingUser': row[1], 'claimText': row[2]} for row in c.fetchall()]
     conn.close()
     return jsonify({'claims': claims})
-
-
 
 
 @app.route("/add_claim", methods=["POST"])
@@ -259,7 +237,6 @@ def add_claim():
             if topic_name is None:
                 return "Topic name is missing", 400
             
-            # Make sure the claim text is not too long
             wrapped_claim_text = "\n".join(textwrap.wrap(claim_text, width=50))
 
             conn = connectDB()
