@@ -29,24 +29,22 @@
         <h1>{% if topic_name %}{{ topic_name }}{% else %}Topic Name{% endif %}</h1> 
     </div>
 
-    <input type="hidden" id="currentUserId" value="{{ current_user.id }}">
-
     <div class="addClaimForm" data-topic="{% if topic_name %}{{ topic_name }}{% endif %}">
         {% if session.logged_in %}
             <textarea id="claimText" placeholder="Claim Text (maximum 250 characters)" maxlength="250" required></textarea>
             <button id="addClaimButton">Add</button>
         {% else %}
-            <p>Log in to add a claim</p>
+            <p>Sign in to add a claim</p>
         {% endif %}
     </div>
 
     <div class="container">
         <div id="card-grid">
-         
+            <!-- Topics will be dynamically added here -->
         </div>
     </div>
 
-        <!-- Popup modal structure -->
+    <!-- Popup modal structure -->
     <div id="claimModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -62,8 +60,6 @@
             </form>
         </div>
     </div>
-
-
     <script src="{{ url_for('static', filename='topic.js') }}"></script>
 </body>
 </html>

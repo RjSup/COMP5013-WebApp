@@ -4,7 +4,6 @@
 import os
 import time
 from flask import Flask, render_template, request, redirect, jsonify, session
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import sqlite3
 import hashlib
 import textwrap
@@ -20,33 +19,19 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="None",  # Allow cookies to be sent in cross-site requests
 )
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-
 # ====================
 # SETUP
 # ====================
-
-# User class for Flask-Login
-class User(UserMixin):
-    def __init__(self, id):
-        self.id = id
-
-# login_manager callback to reload the user object from the user ID stored in the session
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
-
 
 def connectDB():
     conn = sqlite3.connect('debate.sqlite')
     conn.row_factory = sqlite3.Row
     return conn
 
-
 # ====================
 # FUNCTIONS
 # ====================
+
 # Add user to database
 def addUser(username, password, isAdmin):
     passwordHash = hash(password)
@@ -63,22 +48,6 @@ def addUser(username, password, isAdmin):
     conn.commit()
     conn.close()
 
-
-@app.route("/add_admin", methods=["GET","POST"])
-def add_admin():
-    if request.method == "GET":
-        return render_template("admin.html")
-
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        addUser(username, password, isAdmin=True)
-        return "Success"
-    else:
-        return "Why are you here?"
-
-
 # Authenticate user
 def authUser(username, password):
     conn = connectDB()
@@ -90,19 +59,28 @@ def authUser(username, password):
     if user:
         storedPassword = user[2]
         if hash(password) == storedPassword:
-            return User(user[0])
+            return user[0]  # Return user ID
+    return None
+
+# Get the user ID based on session data
+def getUserId(request):
+    if 'logged_in' in session:
+        return session.get('user_id', None)
     return None
 
 
-# Check if user is admin
-def isAdmin():
-    if current_user.is_authenticated:
-        conn = connectDB()
-        c = conn.cursor()
-        c.execute("SELECT isAdmin FROM user WHERE userID = ?", (current_user.id,))
-        isAdmin = c.fetchone()[0]
-        conn.close()
-        return bool(isAdmin)
+# Check if the user is an admin based on the database
+def isAdmin(request):
+    if 'logged_in' in session:
+        user_id = session.get('user_id')
+        if user_id:
+            conn = connectDB()
+            c = conn.cursor()
+            c.execute("SELECT isAdmin FROM user WHERE userID = ?", (user_id,))
+            user_data = c.fetchone()
+            conn.close()
+            if user_data:
+                return bool(user_data[0])
     return False
 
 
@@ -110,24 +88,21 @@ def isAdmin():
 def hash(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-
 # ====================
 # ROUTES
 # ====================
+
 # Logout route
 @app.route("/logout", methods=["GET", "POST"])
-@login_required
 def logout():
-    logout_user()
+    session.pop('user_id', None)
     session.pop('logged_in', None)
     return redirect("/")
-
 
 # Landing page route
 @app.route("/")
 def landingPage():
     return render_template('landing.html')
-
 
 # Signup page route
 @app.route("/signup", methods=["POST"])
@@ -135,12 +110,10 @@ def signup():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-
         addUser(username, password, isAdmin=False)
         return "success"
     else:
         return "Please sign up"
-
 
 # Login route
 @app.route("/login", methods=["POST"])
@@ -148,10 +121,9 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-
-        user = authUser(username, password)
-        if user:
-            login_user(user)
+        user_id = authUser(username, password)
+        if user_id:
+            session['user_id'] = user_id
             session['logged_in'] = True
             return "login successful"
         else:
@@ -159,26 +131,24 @@ def login():
     else:
         return "Please log in"
 
-
 # Check if user is logged in
 @app.route("/check-login")
 def checkLogin():
-    if current_user.is_authenticated:
-        session['logged_in'] = True
-        return jsonify({"logged_in": True, "is_admin": isAdmin()})
+    if 'logged_in' in session and session['logged_in']:
+        user_id = session['user_id']
+        return jsonify({"logged_in": True, "is_admin": isAdmin(user_id)})
     else:
         session.pop('logged_in', None)
         return jsonify({"logged_in": False})
-
+    
 
 # Add topic route
 @app.route("/add_topic", methods=["POST"])
-@login_required
 def add_topic():
     if request.method == "POST":
-        if isAdmin():  
+        if isAdmin(request):  
             topicName = request.form["topicName"]
-            postingUser = current_user.id
+            postingUser = getUserId(request)
             creationTime = int(time.time())
             updateTime = creationTime
             conn = connectDB()
@@ -191,10 +161,10 @@ def add_topic():
         else:
             return "Only admins can add topics"
     else:
-        return "Please log in to add a topic"
+        return "Invalid request method"
 
 
-# Fetch topics route
+
 @app.route("/fetch_topics")
 def fetch_topics():
     conn = connectDB()
@@ -205,11 +175,12 @@ def fetch_topics():
     return jsonify({'topics': topics})
 
 
+
 # New route to handle topic pages
 @app.route("/topic/<topic_name>")
 def topic_page(topic_name):
-    checkLogin()
-    return render_template('topic.html', topic_name=topic_name)
+        return render_template('topic.html', topic_name=topic_name)
+
 
 
 # Update the route for fetching claims to accept the topic name
@@ -224,13 +195,12 @@ def fetch_claims(topic_name):
 
 
 @app.route("/add_claim", methods=["POST"])
-@login_required
 def add_claim():
     if request.method == "POST":
-        if checkLogin():
+        if 'user_id' in session:
             topic_name = request.form.get('topic_name')
             claim_text = request.form.get("claimText")
-            posting_user = current_user.id
+            posting_user = session['user_id']
             creation_time = int(time.time())
             update_time = creation_time
             

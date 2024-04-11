@@ -1,60 +1,50 @@
 $(document).ready(function() {
-    // test ready function
     console.log('Document is ready');
-    checkLoggedIn(); // Check if user is logged in
     getTopics(); // Get topics from the database
-   
-    // Add event listener for login link
+
     $(document).on('click', '#loginLink', function(e) {
         e.preventDefault();
-        // test login link click
         console.log('Login link clicked');
         showLoginForm();
     });
 
-    // Add event listener for signup link
     $(document).on('click', '#signupLink', function(e) {
         e.preventDefault();
-        // test signup link click
         console.log('Signup link clicked');
         showSignupForm();
     });
 
-    // Add event listener for logout link
     $(document).on('click', '#logoutLink', function(e) {
         e.preventDefault();
-        // test logout link click
         console.log('Logout link clicked');
         logout();
     });
 
-    // Add event listener for add topic form
     $('#addTopicForm').submit(function(event) {
         event.preventDefault();
         var topicName = $('#topicName').val();
-        var postingUser = $('#postingUser').val();
-        // Check if user is logged in
         $.ajax({
             url: '/check-login',
             type: 'GET',
             success: function(response) {
-                // test check login success
                 console.log('Check login success:', response); 
-                if (response.logged_in) {
-                    addTopic(topicName, postingUser);
+                if (response.logged_in && response.is_admin) {
+                    addTopic(topicName);
                 } else {
-                    // test check login failure
-                    console.log('Not logged in:', response);
+                    console.log('Not logged in or not admin:', response);
                     showLoginForm();
                 }
             },
             error: function(xhr, status, error) {
-                // check for any errors
                 console.error("Error:", error);
             }
         });
     });
+
+    // Initially hide the add topic form if the user is not an admin
+    checkLoggedIn();
 });
+
 
 function showLoginForm() {
     $('#authForms').html(`
@@ -143,21 +133,20 @@ function checkLoggedIn() {
         type: 'GET',
         url: '/check-login',
         success: function(response) {
-            // test check login success
             console.log('Check login success:', response);
             if (response.logged_in) {
                 $('#authLinks').html(`<a id="logoutLink" href="#">Logout</a>`);
                 if (response.is_admin) {
-                    $('#addTopicForm').show();
+                    $('#addTopicForm').show(); // Show add topic form for admins
                 } else {
-                    $('#addTopicForm').hide();
+                    $('#addTopicForm').hide(); // Hide add topic form for non-admins
                 }
             } else {
                 $('#authLinks').html(`
                     <a id="loginLink" href="#">Login</a>
                     <a id="signupLink" href="#">Sign Up</a>
                 `);
-                $('#addTopicForm').hide();
+                $('#addTopicForm').hide(); // Hide add topic form for non-logged in users
             }
         },
         error: function(xhr, status, error) {
@@ -165,6 +154,7 @@ function checkLoggedIn() {
         }
     });
 }
+
 
 function logout() {
     $.ajax({
@@ -194,12 +184,7 @@ function addTopic(topicName, postingUser) {
         success: function(response) {
             // test add topic success
             console.log('Add topic success:', response);
-            getTopics();
-            $('#topicCards').append('<div class="topicCard">' +
-                '<h3>' + topicName + '</h3>' +
-                '<p>Posting User: ' + postingUser + '</p>' +
-                '</div>');
-            
+            getTopics(); // Fetch updated topics from the server
             $('#topicId').val('');
             $('#topicName').val('');
             $('#postingUser').val('');
@@ -210,12 +195,13 @@ function addTopic(topicName, postingUser) {
     });
 }
 
+
+
 function getTopics() {
     $.ajax({
         type: 'GET',
         url: '/fetch_topics',
         success: function(response) {
-            // test fetch topics success
             console.log('Fetch topics success:', response);
             renderTopics(response.topics);
         },
@@ -226,6 +212,11 @@ function getTopics() {
 }
 
 function renderTopics(topics) {
+    if (!topics || topics.length === 0) {
+        console.log("No topics found in response");
+        return;
+    }
+
     $('#topicCards').empty();
 
     topics.forEach(function(topic, index) {
