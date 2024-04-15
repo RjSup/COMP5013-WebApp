@@ -1,11 +1,9 @@
 $(document).ready(function() {
-    console.log('Document is ready');
-    getTopics(); // Get topics from the database
+    console.log('Landing ready');
+    getTopics(); 
     setupAuthLinks();
     setupAddTopicForm();
     setupSearch();
-
-    // Initially hide the add topic form if the user is not an admin
     checkLoggedIn();
 });
 

@@ -301,6 +301,7 @@ def add_claim():
         return "Invalid request method"
 
 
+# Searchbar functionality
 @app.route('/search')
 def search():
     search_term = request.args.get('term')
@@ -353,6 +354,7 @@ def submit_reply():
                     c.execute("INSERT INTO replyText (postingUser, creationTime, text) VALUES (?, ?, ?)",
                               (posting_user, creation_time, reply_text))
                     reply_to_claim_id = c.lastrowid  # Get the ID of the inserted row
+                    
                     # Insert into replyToClaimType table
                     c.execute("INSERT INTO replyToClaim (replyToClaimID, reply, claim, replyToClaimRelType) VALUES (?, ?, ?, ?)",
                               (reply_to_claim_id, reply_text, topic_name, reply_type))
@@ -366,7 +368,6 @@ def submit_reply():
             return "Please log in to submit a reply"
     else:
         return "Invalid request method"
-
 
 
 # Start app

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log('Document is ready');
+    console.log('Topics ready');
     checkLoggedIn();
     setupAuthLinks();
     setupTopicPage();
