@@ -43,7 +43,11 @@ $(document).ready(function() {
 
     $('#searchBtn').click(function() {
         var searchTerm = $('#searchInput').val();
-        searchTopics(searchTerm);
+        if (searchTerm.trim() !== '') { // Check if the search term is not empty or whitespace
+            searchTopics(searchTerm);
+        } else {
+            alert("Please enter a search term.");
+        }
     });
 
     // Initially hide the add topic form if the user is not an admin
