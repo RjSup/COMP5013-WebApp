@@ -1,173 +1,63 @@
 $(document).ready(function() {
     console.log('Document is ready');
     checkLoggedIn();
-   
-    // Fetch topic name asynchronously
-    var topicName = document.title.split(' | ')[1].trim();
-    $('.topicHeader h1').text(topicName);
-    fetchClaims(topicName);
-   
-    // Event listener for login link
+    setupAuthLinks();
+    setupTopicPage();
+    setupClaimEvents();
+});
+
+function setupAuthLinks() {
     $(document).on('click', '#loginLink', function(e) {
         e.preventDefault();
         console.log('Login link clicked');
         showLoginForm();
     });
 
-    // Event listener for signup link
     $(document).on('click', '#signupLink', function(e) {
         e.preventDefault();
         console.log('Signup link clicked');
         showSignupForm();
     });
 
-    // Event listener for logout link
     $(document).on('click', '#logoutLink', function(e) {
         e.preventDefault();
         console.log('Logout link clicked');
         logout();
     });
-});
-
-// Function to show login form
-function showLoginForm() {
-    $('#authForms').html(`
-        <form id="loginForm">
-            <input type="text" id="loginUsername" placeholder="Username" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-    `);
-    $('#loginForm').submit(function(e) {
-        e.preventDefault();
-        console.log('Login form submitted');
-        var username = $('#loginUsername').val();
-        var password = $('#loginPassword').val();
-        login(username, password);
-    });
 }
 
-// Function to show signup form
-function showSignupForm() {
-    $('#authForms').html(`
-        <form id="signupForm">
-            <input type="text" id="signupUsername" placeholder="Username" required>
-            <input type="password" id="signupPassword" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
-        </form>
-    `);
-    $('#signupForm').submit(function(e) {
-        e.preventDefault();
-        console.log('Signup form submitted');
-        var username = $('#signupUsername').val();
-        var password = $('#signupPassword').val();
-        signup(username, password);
-    });
+function setupTopicPage() {
+    var topicName = document.title.split(' | ')[1].trim();
+    $('.topicHeader h1').text(topicName);
+    fetchClaims(topicName);
 }
 
-// Function to login
-function login(username, password) {
-    $.ajax({
-        type: 'POST',
-        url: '/login',
-        data: {
-            username: username,
-            password: password
-        },
-        success: function(response) {
-            console.log('Login success:', response);
-            alert(response);
-            checkLoggedIn();
-            // Close login form
-            $('#authForms').empty();
-        },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-            alert("Error: " + error);
+function setupClaimEvents() {
+    $(document).on('click', '#addClaimButton', function(event) {
+        event.preventDefault();
+        addClaim();
+    });
+
+    $(document).on('click', '.card', function() {
+        showClaimDetails();
+    });
+
+    $('.close, .modal').on('click', function(event) {
+        if (event.target === this) {
+            $('#claimModal').css('display', 'none');
         }
     });
-}
 
-// Function to logout
-function logout() {
-    $.ajax({
-        type: 'POST',
-        url: '/logout',
-        success: function(response) {
-            console.log('Logout success:');
-            checkLoggedIn();
-        },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-            alert("Error: " + error);
-        }
+    $(document).on('submit', '#replyForm', function(event) {
+        event.preventDefault();
+        submitReplyForm();
     });
 }
 
-// Function to signup
-function signup(username, password) {
-    $.ajax({
-        type: 'POST',
-        url: '/signup',
-        data: {
-            username: username,
-            password: password
-        },
-        success: function(response) {
-            console.log('Signup success:', response);
-            alert(response);
-            window.location.href = '/';
-            checkLoggedIn();
-            // Close signup form
-            $('#authForms').empty();
-        },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-            alert("Error: " + error);
-        }
-    });
-}
-
-// Function to check if user is logged in
-function checkLoggedIn() {
-    $.ajax({
-        type: 'GET',
-        url: '/check-login',
-        success: function(response) {
-            console.log('Check login success:', response);
-            if (response.logged_in) {
-                $('#authLinks').html(`<a id="logoutLink" href="#">Logout</a>`);
-                $('.addClaimForm p').hide(); // Hide the "Log in to add claim" message
-                $('.addClaimForm textarea').show(); // Show the add claim form
-                $('.addClaimForm button').show(); // Show the add claim button
-                if (response.is_admin) {
-                    $('#addTopicForm').show();
-                } else {
-                    $('#addTopicForm').hide();
-                }
-            } else {
-                $('#authLinks').html(`
-                    <a id="loginLink" href="#">Login</a>
-                    <a id="signupLink" href="#">Sign Up</a>
-                `);
-                $('.addClaimForm p').show(); // Show the "Log in to add claim" message
-                $('.addClaimForm textarea').hide(); // Hide the add claim form
-                $('.addClaimForm button').hide(); // Hide the add claim button
-                $('#addTopicForm').hide();
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-        }
-    });
-}
-
-// Add an event listener for claim submission
-$(document).on('click', '#addClaimButton', function(event) {
-    event.preventDefault();
+function addClaim() {
     var claimText = $('#claimText').val().trim();
     var postingUser = $('#currentUserId').val();
-    var topicName = $('.addClaimForm').data('topic'); // Get the topic name from the form's data
+    var topicName = $('.addClaimForm').data('topic');
 
     $.ajax({
         url: '/add_claim',
@@ -179,17 +69,33 @@ $(document).on('click', '#addClaimButton', function(event) {
         },
         success: function(response) {
             console.log('Add claim success:', response);
-            fetchClaims(topicName); // Fetch and render updated claims
-            $('#claimText').val(''); // Clear the claim text input field
+            fetchClaims(topicName);
+            $('#claimText').val('');
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
         }
     });
-});
+}
 
+function showClaimDetails() {
+    var claimText = $(this).find('p:first').text();
+    $('#claimDetail').text(claimText);
+    $('#claimModal').css('display', 'block');
+}
 
-// Fetch claims for the topic asynchronously
+function submitReplyForm() {
+    var replyText = $('#replyText').val().trim();
+    var replyType = $('input[name="replyType"]:checked').val();
+    var topicName = $('#claimDetail').text();
+
+    if (replyText && replyType && topicName) {
+        submitReply(replyText, replyType, topicName);
+    } else {
+        console.log("Error");
+    }
+}
+
 function fetchClaims(topicName) {
     $.ajax({
         type: 'GET',
@@ -204,7 +110,6 @@ function fetchClaims(topicName) {
     });
 }
 
-// Render claims asynchronously
 function renderClaims(claims) {
     $('#card-grid').empty();
 
@@ -251,30 +156,6 @@ function renderClaims(claims) {
     });
 }
 
-// Event listener for claim click to show claim details popup
-$(document).on('click', '.card', function() {
-    var claimText = $(this).find('p:first').text();
-    $('#claimDetail').text(claimText);
-    $('#claimModal').css('display', 'block');
-});
-
-// Close the claim details popup when the close button or outside area is clicked
-$('.close, .modal').on('click', function(event) {
-    if (event.target === this) {
-        $('#claimModal').css('display', 'none');
-    }
-});
-
-// Submit reply form
-$(document).on('submit', '#replyForm', function(event) {
-    event.preventDefault();
-    var replyText = $('#replyText').val().trim();
-    var replyType = $('input[name="replyType"]:checked').val();
-    var claimText = $('#claimDetail').text(); // Retrieve claim details from the popup
-
-});
-
-// Function to submit a reply
 function submitReply(replyText, replyType, topicName) {
     $.ajax({
         type: 'POST',
@@ -295,17 +176,3 @@ function submitReply(replyText, replyType, topicName) {
         }
     });
 }
-
-// Event listener for reply form submission
-$(document).on('submit', '#replyForm', function(event) {
-    event.preventDefault();
-    var replyText = $('#replyText').val().trim();
-    var replyType = $('input[name="replyType"]:checked').val();
-    var topicName = $('#claimDetail').text();
-    if (replyText && replyType && topicName) {
-        submitReply(replyText, replyType, topicName);
-    } else {
-        // Handle missing data, maybe show a validation message
-    }
-});
-
