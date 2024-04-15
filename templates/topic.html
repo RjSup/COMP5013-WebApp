@@ -13,15 +13,21 @@
         <div class="title">
             <a href="/">Conversely</a>
         </div>
+        <div id="searchBar" class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search topics or claims">
+            <button id="searchBtn">Search</button>
+        </div>
         <div id="authLinks" class="auth-links">
             {% if session.logged_in %}
-                <button id="btn"><a href="#" id="logoutLink">Logout</a></button>
+                <button><a href="#" id="logoutLink">Logout</a></button>
             {% else %}
-                <button id="btn"><a href="#" id="loginLink">Login</a></button>
-                <button id="btn"><a href="#" id="signupLink">Sign Up</a></button>
+                <button><a href="#" id="loginLink">Login</a></button>
+                <button><a href="#" id="signupLink">Sign Up</a></button>
             {% endif %}
         </div>
     </nav>
+    
+
 
     <div id="authForms"></div>
 
@@ -40,7 +46,7 @@
 
     <div class="container">
         <div id="card-grid">
-            <!-- Topics will be dynamically added here -->
+           
         </div>
     </div>
 
@@ -52,12 +58,16 @@
             <p id="claimDetail"></p>
             <form id="replyForm">
                 <textarea id="replyText" placeholder="Your reply..." required></textarea>
-                <input class="in" type="radio" id="forReply" name="replyType" value="for" required>
-                <label for="forReply">For</label>
-                <input class="in" type="radio" id="againstReply" name="replyType" value="against" required>
-                <label for="againstReply">Against</label>
-                <button id="btn2" type="submit">Submit Reply</button>
+                <input type="radio" id="clarificationReply" name="replyType" value="1" required>
+                <label for="clarificationReply">Clarification</label>
+                <input type="radio" id="supportingArgumentReply" name="replyType" value="2" required>
+                <label for="supportingArgumentReply">Supporting Argument</label>
+                <input type="radio" id="counterargumentReply" name="replyType" value="3" required>
+                <label for="counterargumentReply">Counterargument</label>
+                <button type="submit">Submit Reply</button>
+                <input type="hidden" id="topicName" value="{% if topic_name %}{{ topic_name }}{% endif %}">
             </form>
+            
         </div>
     </div>
     

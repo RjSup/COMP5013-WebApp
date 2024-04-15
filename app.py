@@ -301,6 +301,74 @@ def add_claim():
         return "Invalid request method"
 
 
+@app.route('/search')
+def search():
+    search_term = request.args.get('term')
+    
+    conn = connectDB();
+    if conn:
+        try:
+            c = conn.cursor()
+            c.execute("SELECT * FROM topic WHERE topicName LIKE ?", ('%' + search_term + '%',) )
+            topic_results = c.fetchall()
+
+            c.execute("SELECT * FROM claim WHERE text LIKE ?", ('%' + search_term + '%',))
+            claim_results = c.fetchall()
+
+            c.close()
+
+            results = {
+                'topics': [dict(row) for row in topic_results],
+                'claims': [dict(row) for row in claim_results]
+            }
+
+            return jsonify(results=results)
+
+        except sqlite3.Error as e:
+            print("SQLite error:", e)
+
+            return "Failed to add claim. Please try again later.", 500
+
+
+# Add reply route to submit a reply to a claim
+@app.route("/submit_reply", methods=["POST"])
+def submit_reply():
+    if request.method == "POST":
+        if 'user_id' in session:
+            reply_text = request.form.get('replyText')
+            posting_user = session['user_id']
+            creation_time = int(time.time())
+            reply_type = request.form.get('replyType')
+            topic_name = request.form.get('topicName') 
+            
+            # Basic form validation
+            if not reply_text or not reply_type:
+                return "Reply text and type are required", 400
+            
+            conn = connectDB()
+            if conn:
+                try:
+                    c = conn.cursor()
+                    # Insert into replyToClaim table
+                    c.execute("INSERT INTO replyText (postingUser, creationTime, text) VALUES (?, ?, ?)",
+                              (posting_user, creation_time, reply_text))
+                    reply_to_claim_id = c.lastrowid  # Get the ID of the inserted row
+                    # Insert into replyToClaimType table
+                    c.execute("INSERT INTO replyToClaim (replyToClaimID, reply, claim, replyToClaimRelType) VALUES (?, ?, ?, ?)",
+                              (reply_to_claim_id, reply_text, topic_name, reply_type))
+                    conn.commit()
+                    conn.close()
+                    return "success"
+                except sqlite3.Error as e:
+                    print("SQLite error:", e)
+                    return "Failed to submit reply. Please try again later.", 500
+        else:
+            return "Please log in to submit a reply"
+    else:
+        return "Invalid request method"
+
+
+
 # Start app
 if __name__ == "__main__":
     app.run(debug=True)

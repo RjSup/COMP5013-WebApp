@@ -273,3 +273,39 @@ $(document).on('submit', '#replyForm', function(event) {
     var claimText = $('#claimDetail').text(); // Retrieve claim details from the popup
 
 });
+
+// Function to submit a reply
+function submitReply(replyText, replyType, topicName) {
+    $.ajax({
+        type: 'POST',
+        url: '/submit_reply',
+        data: {
+            replyText: replyText,
+            replyType: replyType,
+            topicName: topicName
+        },
+        success: function(response) {
+            console.log('Reply submission success:', response);
+            $('#claimModal').css('display', 'none');
+            // Handle success, maybe show a confirmation message
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+            // Handle error, maybe show an error message to the user
+        }
+    });
+}
+
+// Event listener for reply form submission
+$(document).on('submit', '#replyForm', function(event) {
+    event.preventDefault();
+    var replyText = $('#replyText').val().trim();
+    var replyType = $('input[name="replyType"]:checked').val();
+    var topicName = $('#claimDetail').text();
+    if (replyText && replyType && topicName) {
+        submitReply(replyText, replyType, topicName);
+    } else {
+        // Handle missing data, maybe show a validation message
+    }
+});
+
