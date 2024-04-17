@@ -368,6 +368,28 @@ def submit_reply():
             return "Please log in to submit a reply"
     else:
         return "Invalid request method"
+    
+
+@app.route("/fetch_replies/<topic_name>")
+def fetch_replies(topic_name):
+    claim_text = request.args.get('claimText')  # Get the claim text from the request
+    conn = connectDB()
+    if conn:
+        try:
+            c = conn.cursor()
+            c.execute("""
+                SELECT reply.text, reply.postingUser, rel.replyToClaimRelType 
+                FROM replyText AS reply 
+                JOIN replyToClaim AS rel ON reply.replyTextID = rel.replyToClaimID 
+                JOIN claim ON claim.text = rel.claim 
+                WHERE claim.topic = ? AND claim.text = ?
+            """, (topic_name, claim_text))
+            replies = [{'text': row[0], 'postingUser': row[1], 'replyType': row[2]} for row in c.fetchall()]
+            conn.close()
+            return jsonify({'replies': replies})
+        except sqlite3.Error as e:
+            print("SQLite error:", e)
+    return "Failed to fetch replies. Please try again later.", 500
 
 
 # Start app

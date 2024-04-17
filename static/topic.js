@@ -39,7 +39,7 @@ function setupClaimEvents() {
     });
 
     $(document).on('click', '.card', function() {
-        showClaimDetails();
+        showClaimDetails($(this).find('p:first').text().trim());
     });
 
     $('.close, .modal').on('click', function(event) {
@@ -78,16 +78,21 @@ function addClaim() {
     });
 }
 
-function showClaimDetails() {
-    var claimText = $(this).find('p:first').text();
+function showClaimDetails(claimText) {
+    var topicName = document.title.split(' | ')[1].trim();
     $('#claimDetail').text(claimText);
     $('#claimModal').css('display', 'block');
+
+    console.log('Topic Name:', topicName);
+    console.log('Claim Text:', claimText);
+
+    fetchReplies(topicName, claimText);
 }
 
 function submitReplyForm() {
     var replyText = $('#replyText').val().trim();
     var replyType = $('input[name="replyType"]:checked').val();
-    var topicName = $('#claimDetail').text();
+    var topicName = $('#claimDetail').text().trim();
 
     if (replyText && replyType && topicName) {
         submitReply(replyText, replyType, topicName);
@@ -111,7 +116,7 @@ function fetchClaims(topicName) {
 }
 
 function renderClaims(claims) {
-    $('#card-grid').empty();
+    var $cardGrid = $('#card-grid').empty();
 
     claims.forEach(function(claim, index) {
         var claimElement = $('<div class="card">' +
@@ -119,8 +124,7 @@ function renderClaims(claims) {
             '<p>Posting User: ' + claim.postingUser + '</p>' +
             '</div>');
 
-        $('#card-grid').append(claimElement);
-
+        $cardGrid.append(claimElement);
         $('#card-grid').css({
             'display': 'grid',
             'grid-template-columns': 'repeat(3, 1fr)',
@@ -152,7 +156,6 @@ function renderClaims(claims) {
                 });
             }
         );
-
     });
 }
 
@@ -168,11 +171,53 @@ function submitReply(replyText, replyType, topicName) {
         success: function(response) {
             console.log('Reply submission success:', response);
             $('#claimModal').css('display', 'none');
-            // Handle success, maybe show a confirmation message
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-            // Handle error, maybe show an error message to the user
         }
     });
 }
+
+function fetchReplies(topicName, claimText) {
+    $.ajax({
+        type: 'GET',
+        url: '/fetch_replies/' + topicName,
+        data: {
+            claimText: claimText
+        },
+        success: function(response) {
+            console.log('Fetch replies response:', response);
+            renderReplies(response.replies);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+}
+
+function renderReplies(replies) {
+    var $claimReplies = $('#claimReplies').empty();
+
+    replies.forEach(function(reply) {
+        var replyElement = $('<div class="reply">' +
+            '<p class="comment">' + reply.text + '</p>' +
+            '</div>');
+
+        // Add reply type directly based on the replyType field from the response
+        if (reply.replyType === 1) {
+            replyElement.append('<p class="clarification">Clarification</p>');
+        } else if (reply.replyType === 2) {
+            replyElement.append('<p class="supportingArgument">Supporting Argument</p>');
+        } else if (reply.replyType === 3) {
+            replyElement.append('<p class="counterargument">Counterargument</p>');
+        } else {
+            replyElement.append('<p class="against">Against</p>');
+        }
+
+        $claimReplies.append(replyElement);
+    });
+
+    $('.reply').css('margin-bottom', '20px');
+}
+
+

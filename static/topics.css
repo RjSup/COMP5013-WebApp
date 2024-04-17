@@ -3,6 +3,18 @@
     box-sizing: border-box;
 }
 
+h2 {
+    display: flex;
+    justify-content: center;
+}
+
+#claimDetail {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 nav {
     background: #1a202c;
     color: #a0aec0;
@@ -128,12 +140,17 @@ nav {
 
 /* Modal content */
 .modal-content {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 70%; /* Could be more or less, depending on screen size */
-    max-width: 500px; /* Max width */
+    height: 55%;
+    max-width: 1000px; /* Max width */
+    max-height: 500px;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Box shadow */
 }
@@ -185,5 +202,6 @@ textarea {
 
 /* Radio button styles */
 .in[type="radio"] {
-    margin-right: 10px;
+    margin-right: 20px;
 }
+
