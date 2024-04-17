@@ -23,6 +23,7 @@ app.config.update(
 # SETUP
 # ====================
 
+
 def connectDB():
     try:
         conn = sqlite3.connect('debate.sqlite')
@@ -45,7 +46,8 @@ def isAdmin(request):
             if conn:
                 try:
                     c = conn.cursor()
-                    c.execute("SELECT isAdmin FROM user WHERE userID = ?", (user_id,))
+                    c.execute(
+                        "SELECT isAdmin FROM user WHERE userID = ?", (user_id,))
                     user_data = c.fetchone()
                     conn.close()
                     if user_data:
@@ -109,6 +111,8 @@ def hash(password):
 # ====================
 
 # Logout route
+
+
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
     session.pop('user_id', None)
@@ -128,27 +132,27 @@ def signup():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         # Basic form validation
         if not username or not password:
             return "Username and password are required", 400
-        
+
         # Input sanitization
         username = username.strip()  # Strip leading and trailing spaces
         password = password.strip()  # Strip leading and trailing spaces
-        
+
         # Check if username is alphanumeric
         if not username.isalnum():
             return "Username should contain only alphanumeric characters", 400
-        
+
         # Check if password meets complexity requirements
         if len(password) < 4:
             return "Password should be at least 4 characters long", 400
-        
+
         # Proceed with signup
         if not addUser(username, password, isAdmin=False):
             return "Failed to sign up. Please try again later.", 500
-        
+
         return "success"
     else:
         return "Please sign up"
@@ -160,15 +164,15 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         # Basic form validation
         if not username or not password:
             return "Username and password are required", 400
-        
+
         # Input sanitization
         username = username.strip()  # Strip leading and trailing spaces
         password = password.strip()  # Strip leading and trailing spaces
-        
+
         # Proceed with login
         user_id = authUser(username, password)
         if user_id:
@@ -190,25 +194,25 @@ def checkLogin():
     else:
         session.pop('logged_in', None)
         return jsonify({"logged_in": False})
-    
+
 
 # Add topic route with admin validation
 @app.route("/add_topic", methods=["POST"])
 def add_topic():
     if request.method == "POST":
-        if isAdmin(request):  
+        if isAdmin(request):
             topicName = request.form["topicName"]
             postingUser = getUserId(request)
             creationTime = int(time.time())
             updateTime = creationTime
-            
+
             # Basic form validation
             if not topicName:
                 return "Topic name is required", 400
-            
+
             # Input sanitization
             topicName = topicName.strip()  # Strip leading and trailing spaces
-            
+
             # Proceed with adding topic
             conn = connectDB()
             if conn:
@@ -235,8 +239,10 @@ def fetch_topics():
     if conn:
         try:
             c = conn.cursor()
-            c.execute("SELECT topic.topicName, user.userName FROM topic JOIN user ON topic.postingUser = user.userID")
-            topics = [{'topicName': row[0], 'postingUser': row[1]} for row in c.fetchall()]
+            c.execute(
+                "SELECT topic.topicName, user.userName FROM topic JOIN user ON topic.postingUser = user.userID")
+            topics = [{'topicName': row[0], 'postingUser': row[1]}
+                      for row in c.fetchall()]
             conn.close()
             return jsonify({'topics': topics})
         except sqlite3.Error as e:
@@ -258,7 +264,8 @@ def fetch_claims(topic_name):
         try:
             c = conn.cursor()
             c.execute("SELECT claim.topic, claim.postingUser, claim.text FROM claim JOIN topic ON claim.topic = topic.topicName WHERE topic.topicName = ?", (topic_name,))
-            claims = [{'topic': row[0], 'postingUser': row[1], 'claimText': row[2]} for row in c.fetchall()]
+            claims = [{'topic': row[0], 'postingUser': row[1],
+                       'claimText': row[2]} for row in c.fetchall()]
             conn.close()
             return jsonify({'claims': claims})
         except sqlite3.Error as e:
@@ -276,11 +283,11 @@ def add_claim():
             posting_user = session['user_id']
             creation_time = int(time.time())
             update_time = creation_time
-            
+
             # Basic form validation
             if not topic_name or not claim_text:
                 return "Topic name and claim text are required", 400
-            
+
             wrapped_claim_text = "\n".join(textwrap.wrap(claim_text, width=50))
 
             conn = connectDB()
@@ -305,15 +312,17 @@ def add_claim():
 @app.route('/search')
 def search():
     search_term = request.args.get('term')
-    
-    conn = connectDB();
+
+    conn = connectDB()
     if conn:
         try:
             c = conn.cursor()
-            c.execute("SELECT * FROM topic WHERE topicName LIKE ?", ('%' + search_term + '%',) )
+            c.execute("SELECT * FROM topic WHERE topicName LIKE ?",
+                      ('%' + search_term + '%',))
             topic_results = c.fetchall()
 
-            c.execute("SELECT * FROM claim WHERE text LIKE ?", ('%' + search_term + '%',))
+            c.execute("SELECT * FROM claim WHERE text LIKE ?",
+                      ('%' + search_term + '%',))
             claim_results = c.fetchall()
 
             c.close()
@@ -340,12 +349,12 @@ def submit_reply():
             posting_user = session['user_id']
             creation_time = int(time.time())
             reply_type = request.form.get('replyType')
-            topic_name = request.form.get('topicName') 
-            
+            topic_name = request.form.get('topicName')
+
             # Basic form validation
             if not reply_text or not reply_type:
                 return "Reply text and type are required", 400
-            
+
             conn = connectDB()
             if conn:
                 try:
@@ -354,7 +363,7 @@ def submit_reply():
                     c.execute("INSERT INTO replyText (postingUser, creationTime, text) VALUES (?, ?, ?)",
                               (posting_user, creation_time, reply_text))
                     reply_to_claim_id = c.lastrowid  # Get the ID of the inserted row
-                    
+
                     # Insert into replyToClaimType table
                     c.execute("INSERT INTO replyToClaim (replyToClaimID, reply, claim, replyToClaimRelType) VALUES (?, ?, ?, ?)",
                               (reply_to_claim_id, reply_text, topic_name, reply_type))
@@ -368,11 +377,12 @@ def submit_reply():
             return "Please log in to submit a reply"
     else:
         return "Invalid request method"
-    
+
 
 @app.route("/fetch_replies/<topic_name>")
 def fetch_replies(topic_name):
-    claim_text = request.args.get('claimText')  # Get the claim text from the request
+    # Get the claim text from the request
+    claim_text = request.args.get('claimText')
     conn = connectDB()
     if conn:
         try:
@@ -384,7 +394,8 @@ def fetch_replies(topic_name):
                 JOIN claim ON claim.text = rel.claim 
                 WHERE claim.topic = ? AND claim.text = ?
             """, (topic_name, claim_text))
-            replies = [{'text': row[0], 'postingUser': row[1], 'replyType': row[2]} for row in c.fetchall()]
+            replies = [{'text': row[0], 'postingUser': row[1],
+                        'replyType': row[2]} for row in c.fetchall()]
             conn.close()
             return jsonify({'replies': replies})
         except sqlite3.Error as e:
