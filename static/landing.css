@@ -195,6 +195,7 @@ footer {
     border: 1px solid #888;
     width: min-content; /* Could be more or less, depending on screen size */
     height: 25%;
+    border-radius: 15px;
 }
 
 /* Close button */
