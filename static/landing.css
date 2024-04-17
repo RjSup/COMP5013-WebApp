@@ -49,6 +49,25 @@ nav {
     margin-right: 10px;
 }
 
+#loginForm, #signupForm {
+    display: flex;
+    height: fit-content;
+    flex-direction: column;
+    padding-right: 12px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+#loginForm, #loginUsername, #loginPassword, #loginSubmit,
+#signupForm, #signupUsername, #signupPassword, #signupSubmit {
+    margin-bottom: 10px;
+}
+
+.topicHeader h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
 /** Dropdown Form Styles */
 .dropdown-form {
     display: none;
@@ -146,6 +165,20 @@ footer {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+/* Modal styles */
+.modal2 {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
 /* Modal content */
 .modal-content {
     background-color: #fefefe;
@@ -153,6 +186,15 @@ footer {
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
+}
+/* Modal content */
+.modal-content2 {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: min-content; /* Could be more or less, depending on screen size */
+    height: 25%;
 }
 
 /* Close button */
@@ -168,4 +210,8 @@ footer {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.btn {
+    width: 50px;
 }

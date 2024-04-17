@@ -67,7 +67,7 @@ nav {
 
 #loginForm, #signupForm {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding-right: 12px;
     padding-bottom: 10px;
     padding-top: 5px;
@@ -138,11 +138,25 @@ nav {
     background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
 }
 
+/* Modal styles */
+.modal2 {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
 /* Modal content */
 .modal-content {
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
+    justify-content: space-between;
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
@@ -153,6 +167,17 @@ nav {
     max-height: 500px;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Box shadow */
+}
+
+/* Modal content */
+.modal-content2 {
+    display: flex;
+    flex-direction: column;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: min-content; /* Could be more or less, depending on screen size */
 }
 
 /* Close button */
@@ -204,4 +229,10 @@ textarea {
 .in[type="radio"] {
     margin-right: 20px;
 }
+
+.btn {
+    width: 50px;
+}
+
+
 

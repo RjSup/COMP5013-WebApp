@@ -42,7 +42,7 @@ function setupClaimEvents() {
         showClaimDetails($(this).find('p:first').text().trim());
     });
 
-    $('.close, .modal').on('click', function(event) {
+    $('.close, .modal2').on('click', function(event) {
         if (event.target === this) {
             $('#claimModal').css('display', 'none');
         }

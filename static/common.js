@@ -1,12 +1,51 @@
-// Common functions for login, signup, logout, and checking login status
 function showLoginForm() {
-    $('#authForms').html(`
-        <form id="loginForm">
-            <input type="text" id="loginUsername" placeholder="Username" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-    `);
+    // Create a modal container div
+    var modalHtml = `
+        <div id="loginModal" class="modal2 common-model">
+            <div class="modal-content2">
+                <span class="close">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+            </div>
+        </div>
+    `;
+
+    // Append modal HTML to the body
+    $('body').append(modalHtml);
+
+    // Show modal
+    $('#loginModal').fadeIn();
+
+    $('#loginModal').css({
+        'width': '100%',
+        'height': '100%',
+        'position': 'fixed', // Fixed positioning
+        'top': '0',
+        'left': '0',
+        'background-color': 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+        'z-index': '1000', // Higher z-index to ensure it's on top
+    });
+
+    // Close the modal when the close button or outside the modal is clicked
+    $(document).on('click', '.close, .common-modal', function(e) {
+        if (e.target === this) {
+            $('#loginModal').fadeOut(function() {
+                $(this).remove();
+            });
+        }
+    });
+
+    // Prevent default form submission
     $('#loginForm').submit(function(e) {
         e.preventDefault();
         console.log('Login form submitted');
@@ -17,13 +56,52 @@ function showLoginForm() {
 }
 
 function showSignupForm() {
-    $('#authForms').html(`
-        <form id="signupForm">
-            <input type="text" id="signupUsername" placeholder="Username" required>
-            <input type="password" id="signupPassword" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
-        </form>
-    `);
+    // Create a modal container div
+    var modalHtml = `
+        <div id="signupModal" class="modal2 common-model">
+            <div class="modal-content2">
+                <span class="close">&times;</span>
+                <h2>Sign Up</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupUsername">Username</label>
+                        <input type="text" id="signupUsername" class="form-control" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    `;
+
+    // Append modal HTML to the body
+    $('body').append(modalHtml);
+
+    // Show modal
+    $('#signupModal').fadeIn();
+
+    $('#loginModal').css({
+        'width': '100%',
+        'height': '100%',
+        'top': '0',
+        'left': '0',
+        'background-color': 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+        'z-index': '1000', // Higher z-index to ensure it's on top
+    });
+
+    // Close the modal when the close button or outside the modal is clicked
+    $(document).on('click', '.close, .common-modal', function(e) {
+        if (e.target === this) {
+            $('#signupModal').fadeOut(function() {
+                $(this).remove();
+            });
+        }
+    });
+
+    // Prevent default form submission
     $('#signupForm').submit(function(e) {
         e.preventDefault();
         console.log('Signup form submitted');
