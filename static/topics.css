@@ -154,7 +154,6 @@ nav {
 
 /* Modal content */
 .modal-content {
-    display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: #fefefe;
@@ -162,9 +161,7 @@ nav {
     padding: 20px;
     border: 1px solid #888;
     width: 70%; /* Could be more or less, depending on screen size */
-    height: 55%;
     max-width: 1000px; /* Max width */
-    max-height: 500px;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Box shadow */
 }
@@ -235,5 +232,11 @@ textarea {
     width: 50px;
 }
 
-
-
+.btnbtn {
+    background: #1a202c;
+    color: #a0aec0;
+    padding: 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}

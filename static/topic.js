@@ -230,25 +230,82 @@ function renderReplies(replies) {
     var $claimReplies = $('#claimReplies').empty();
 
     replies.forEach(function(reply) {
-        var replyElement = $('<div class="reply">' +
-            '<p class="comment">' + reply.text + '</p>' +
-            '</div>');
+        var replyElement = $('<div class="reply"></div>'); // Container for entire reply
+
+        // Main comment text
+        var commentElement = $('<p class="comment" style="margin-bottom: 10px;">Reply: ' + reply.text + '</p>');
+        
+        // Set text color based on reply type
+        if (reply.replyType === 1) {
+            commentElement.css('color', 'blue'); // Clarification
+        } else if (reply.replyType === 2) {
+            commentElement.css('color', 'green'); // Supporting Argument
+        } else if (reply.replyType === 3) {
+            commentElement.css('color', 'red'); // Counterargument
+        }
+        
+        replyElement.append(commentElement);
+
+        // Add the posting user's name
+        var userNameElement = $('<p class="userName" style="margin-bottom: 10px;">Posted by: ' + reply.postingUser + '</p>');
+        replyElement.append(userNameElement);
 
         // Add reply type directly based on the replyType field from the response
+        var replyTypeElement;
         if (reply.replyType === 1) {
-            replyElement.append('<p class="clarification">Clarification</p>');
+            replyTypeElement = $('<p class="replyType clarification" style="margin-bottom: 10px;">Clarification</p>');
         } else if (reply.replyType === 2) {
-            replyElement.append('<p class="supportingArgument">Supporting Argument</p>');
+            replyTypeElement = $('<p class="replyType supportingArgument" style="margin-bottom: 10px;">Supporting Argument</p>');
         } else if (reply.replyType === 3) {
-            replyElement.append('<p class="counterargument">Counterargument</p>');
+            replyTypeElement = $('<p class="replyType counterargument" style="margin-bottom: 10px;">Counterargument</p>');
         } else {
-            replyElement.append('<p class="against">Against</p>');
+            replyTypeElement = $('<p class="replyType against" style="margin-bottom: 10px;">Against</p>');
         }
+        replyElement.append(replyTypeElement);
+
+        // Add "Reply to Claim" button with modern styling
+        var replyButton = $('<button class="btnbtn replyToClaimButton">Reply to Claim</button>');
+        replyElement.append(replyButton);
+
+        // Add reply form
+        var replyForm = $('<form class="replyForm" style="display: none;"></form>'); // Initially hidden
+        var replyTextArea = $('<textarea class="replyText" style="height: 150px; margin-bottom: 10px;" placeholder="Your reply"></textarea>'); // Increase height
+        var replyTypeSelect = $('<select class="replyType btnbtn" style="margin-bottom: 10px;"></select>').append('<option value="1">Reply to Comment</option>');
+        var submitButton = $('<button class="btnbtn replyButton" type="submit">Reply</button>');
+
+        replyForm.append(replyTextArea, '<br>', replyTypeSelect, '<br>', submitButton);
+        replyElement.append(replyForm);
+
+        // Toggle reply form visibility when "Reply to Claim" button is clicked
+        replyButton.click(function() {
+            replyForm.toggle(); // Toggle visibility
+        });
+
+        // Submit reply form
+        replyForm.submit(function(event) {
+            event.preventDefault();
+            var replyText = replyTextArea.val();
+            var replyType = replyTypeSelect.val();
+            // Implement your logic to handle the reply submission
+            // You can use replyText and replyType variables to send the data to the server
+            console.log('Reply Text:', replyText);
+            console.log('Reply Type:', replyType);
+            // Clear reply input after submission
+            replyTextArea.val('');
+        });
+
+        // Add spacing and border around each reply
+        replyElement.css({
+            'border': '1px solid #ccc',
+            'padding': '10px',
+            'border-radius': '5px',
+            'margin-bottom': '20px', // Add spacing between replies
+            'margin-top': '20px' // Add padding to the top
+        });
+
+        // Add margin between elements inside reply form
+        replyForm.children().css('margin-bottom', '10px');
 
         $claimReplies.append(replyElement);
     });
-
-    $('.reply').css('margin-bottom', '20px');
 }
-
-

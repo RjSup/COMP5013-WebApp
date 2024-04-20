@@ -232,15 +232,17 @@ def add_topic():
         return "Invalid request method"
 
 
-# Fetch topics route
 @app.route("/fetch_topics")
 def fetch_topics():
     conn = connectDB()
     if conn:
         try:
             c = conn.cursor()
-            c.execute(
-                "SELECT topic.topicName, user.userName FROM topic JOIN user ON topic.postingUser = user.userID")
+            c.execute("""
+                SELECT topic.topicName, user.userName 
+                FROM topic 
+                JOIN user ON topic.postingUser = user.userID
+            """)
             topics = [{'topicName': row[0], 'postingUser': row[1]}
                       for row in c.fetchall()]
             conn.close()
@@ -263,7 +265,12 @@ def fetch_claims(topic_name):
     if conn:
         try:
             c = conn.cursor()
-            c.execute("SELECT claim.topic, claim.postingUser, claim.text FROM claim JOIN topic ON claim.topic = topic.topicName WHERE topic.topicName = ?", (topic_name,))
+            c.execute("""
+                SELECT claim.topic, user.userName, claim.text 
+                FROM claim 
+                JOIN user ON claim.postingUser = user.userID 
+                WHERE claim.topic = ?
+            """, (topic_name,))
             claims = [{'topic': row[0], 'postingUser': row[1],
                        'claimText': row[2]} for row in c.fetchall()]
             conn.close()
@@ -389,10 +396,11 @@ def fetch_replies(topic_name):
         try:
             c = conn.cursor()
             c.execute("""
-                SELECT reply.text, reply.postingUser, rel.replyToClaimRelType 
+                SELECT reply.text, user.userName, rel.replyToClaimRelType 
                 FROM replyText AS reply 
                 JOIN replyToClaim AS rel ON reply.replyTextID = rel.replyToClaimID 
                 JOIN claim ON claim.text = rel.claim 
+                JOIN user ON reply.postingUser = user.userID
                 WHERE claim.topic = ? AND claim.text = ?
             """, (topic_name, claim_text))
             replies = [{'text': row[0], 'postingUser': row[1],
