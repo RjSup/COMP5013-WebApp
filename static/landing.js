@@ -52,14 +52,35 @@ function setupAddTopicForm() {
 
 function setupSearch() {
     $('#searchBtn').click(function() {
+        getTopics();
         var searchTerm = $('#searchInput').val();
         if (searchTerm.trim() !== '') { // Check if the search term is not empty or whitespace
-            searchTopics(searchTerm);
+            // Perform the search using AJAX
+            $.ajax({
+                type: 'GET',
+                url: '/search',
+                data: {
+                    term: searchTerm
+                },
+                success: function(response) {
+                    console.log('Search success:', response);
+                    // Display search results
+                    displaySearchResults(response.results);
+                    // Clear the search input field
+                    $('#searchInput').val('');
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("Search failed: " + error); // Display error message
+                }
+            });
         } else {
             alert("Please enter a search term.");
         }
     });
 }
+
+
 
 function addTopic(topicName, postingUser) {
     $.ajax({
@@ -79,6 +100,7 @@ function addTopic(topicName, postingUser) {
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
+            alert("Failed to add topic: " + xhr.responseText);
         }
     });
 }
@@ -93,6 +115,7 @@ function getTopics() {
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
+            alert("Failed to get topics:" + xhr.responseText);
         }
     });
 }

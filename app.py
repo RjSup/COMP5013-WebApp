@@ -309,7 +309,7 @@ def add_claim():
 
 
 # Searchbar functionality
-@app.route('/search')
+@app.route('/search', methods=['GET'])
 def search():
     search_term = request.args.get('term')
 
@@ -337,7 +337,8 @@ def search():
         except sqlite3.Error as e:
             print("SQLite error:", e)
 
-            return "Failed to add claim. Please try again later.", 500
+            return "Failed to perform the search. Please try again later.", 500
+
 
 
 # Add reply route to submit a reply to a claim

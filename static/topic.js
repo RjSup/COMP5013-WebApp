@@ -27,7 +27,7 @@ function setupAuthLinks() {
 }
 
 function setupTopicPage() {
-    var topicName = document.title.split(' | ')[1].trim();
+    var topicName = decodeURIComponent(document.title.split(' | ')[1].trim()); // Decode the topic name
     $('.topicHeader h1').text(topicName);
     fetchClaims(topicName);
 }
@@ -59,11 +59,26 @@ function addClaim() {
     var postingUser = $('#currentUserId').val();
     var topicName = $('.addClaimForm').data('topic');
 
+    // Sanitize claim text to prevent XSS attacks
+    claimText = sanitizeInput(claimText);
+
+    // Validate if claim text is not empty
+    if (!claimText) {
+        console.log("Claim text cannot be empty");
+        return; // Exit the function if claim text is empty
+    }
+
+    // Check claim text length
+    if (claimText.length > 500) { // Set the maximum length (e.g., 500 characters)
+        console.log("Claim text is too long");
+        return; // Exit the function if claim text is too long
+    }
+
     $.ajax({
         url: '/add_claim',
         type: 'POST',
         data: {
-            topic_name: topicName,
+            topic_name: topicName, // Use the original topic name
             claimText: claimText,
             postingUser: postingUser
         },
@@ -73,13 +88,14 @@ function addClaim() {
             $('#claimText').val('');
         },
         error: function(xhr, status, error) {
-            console.error("Error:", error);
+            console.error("Error adding claim:", xhr.responseText);
+            alert("Failed to add claim: " + xhr.responseText); // Display an alert with the error message
         }
     });
 }
 
 function showClaimDetails(claimText) {
-    var topicName = document.title.split(' | ')[1].trim();
+    var topicName = decodeURIComponent(document.title.split(' | ')[1].trim()); // Decode the topic name
     $('#claimDetail').text(claimText);
     $('#claimModal').css('display', 'block');
 
@@ -92,7 +108,19 @@ function showClaimDetails(claimText) {
 function submitReplyForm() {
     var replyText = $('#replyText').val().trim();
     var replyType = $('input[name="replyType"]:checked').val();
-    var topicName = $('#claimDetail').text().trim();
+    var topicName = decodeURIComponent($('#claimDetail').text().trim()); // Decode the topic name
+
+    // Validate if reply text is not empty
+    if (!replyText) {
+        console.log("Reply text cannot be empty");
+        return; // Exit the function if reply text is empty
+    }
+
+    // Check reply text length
+    if (replyText.length > 300) { // Set the maximum length (e.g., 300 characters)
+        console.log("Reply text is too long");
+        return; // Exit the function if reply text is too long
+    }
 
     if (replyText && replyType && topicName) {
         submitReply(replyText, replyType, topicName);
@@ -110,7 +138,8 @@ function fetchClaims(topicName) {
             renderClaims(response.claims);
         },
         error: function(xhr, status, error) {
-            console.error("Error:", error);
+            console.error("Error fetching claims:", xhr.responseText);
+            alert("Failed to fetch claims: " + xhr.responseText); // Display an alert with the error message
         }
     });
 }
@@ -173,7 +202,8 @@ function submitReply(replyText, replyType, topicName) {
             $('#claimModal').css('display', 'none');
         },
         error: function(xhr, status, error) {
-            console.error("Error:", error);
+            console.error("Error submitting reply:", xhr.responseText);
+            alert("Failed to submit reply: " + xhr.responseText); // Display an alert with the error message
         }
     });
 }
@@ -190,7 +220,8 @@ function fetchReplies(topicName, claimText) {
             renderReplies(response.replies);
         },
         error: function(xhr, status, error) {
-            console.error("Error:", error);
+            console.error("Error fetching replies:", xhr.responseText);
+            alert("Failed to fetch replies: " + xhr.responseText); // Display an alert with the error message
         }
     });
 }

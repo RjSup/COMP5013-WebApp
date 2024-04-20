@@ -1,3 +1,157 @@
+$(document).ready(function() {
+    console.log('Landing ready');
+    getTopics(); 
+    setupAuthLinks();
+    setupAddTopicForm();
+    setupSearch();
+    checkLoggedIn();
+});
+
+function setupAuthLinks() {
+    $(document).on('click', '#loginLink', function(e) {
+        e.preventDefault();
+        console.log('Login link clicked');
+        showLoginForm();
+    });
+
+    $(document).on('click', '#signupLink', function(e) {
+        e.preventDefault();
+        console.log('Signup link clicked');
+        showSignupForm();
+    });
+
+    $(document).on('click', '#logoutLink', function(e) {
+        e.preventDefault();
+        console.log('Logout link clicked');
+        logout();
+    });
+}
+
+function setupAddTopicForm() {
+    $('#addTopicForm').submit(function(event) {
+        event.preventDefault();
+        var topicName = $('#topicName').val();
+        $.ajax({
+            url: '/check-login',
+            type: 'GET',
+            success: function(response) {
+                console.log('Check login success:', response);
+                if (response.logged_in && response.is_admin) {
+                    addTopic(topicName);
+                } else {
+                    console.log('Not logged in or not admin:', response);
+                    showLoginForm();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+                alert("Error: " + error); // Display error message
+            }
+        });
+    });
+}
+
+function setupSearch() {
+    $('#searchBtn').click(function() {
+        var searchTerm = $('#searchInput').val();
+        if (searchTerm.trim() !== '') { // Check if the search term is not empty or whitespace
+            searchTopics(searchTerm);
+        } else {
+            alert("Please enter a search term.");
+        }
+    });
+}
+
+function addTopic(topicName, postingUser) {
+    $.ajax({
+        url: '/add_topic',
+        type: 'POST',
+        data: {
+            topicName: topicName,
+            postingUser: postingUser
+        },
+        success: function(response) {
+            console.log('Add topic success:', response);
+            getTopics(); // Fetch updated topics from the server
+            $('#topicId').val('');
+            $('#topicName').val('');
+            $('#postingUser').val('');
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+            alert("Failed to add topic: " + error); // Display error message
+        }
+    });
+}
+
+function getTopics() {
+    $.ajax({
+        type: 'GET',
+        url: '/fetch_topics',
+        success: function(response) {
+            console.log('Fetch topics success:', response);
+            renderTopics(response.topics);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+            alert("Failed to get topics: " + error); // Display error message
+        }
+    });
+}
+
+function renderTopics(topics) {
+    if (!topics || topics.length === 0) {
+        console.log("No topics found in response");
+        return;
+    }
+
+    $('#topicCards').empty();
+
+    topics.forEach(function(topic, index) {
+        var topicCard = $('<div class="topicCard" id="topicCard' + index + '">' +
+                            '<h3>'+ topic.topicName + '</h3>' +
+                            '<button class="topicButton" data-topic="' + topic.topicName + '">Join</button>' +
+                         '</div>');
+
+        $('#topicCards').append(topicCard);
+        
+        $('#topicCards').css({
+            'display': 'grid',
+            'grid-template-columns': 'repeat(8, 1fr)',
+            'grid-template-rows': 'repeat(3, 1fr)',
+            'gap': '40px',
+            'padding': '60px',
+        });
+
+        $('.topicCard').css({
+            'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
+            'padding': '20px',
+            'border-radius': '5px',
+        });
+
+        $('.topicCard').hover(
+            function() {
+                $(this).css({
+                    'transform': 'scale(1.001)',
+                    'border': '2px solid',
+                    'border-color': 'rgba(255, 246, 143, 1)',
+                });
+            },
+            function() {
+                $(this).css({
+                    'transform': 'scale(1)',
+                    'border': 'none'
+                });
+            }
+        );
+    });
+
+    $('.topicButton').click(function() {
+        var topicName = $(this).data('topic');
+        window.location.href = '/topic/' + encodeURIComponent(topicName);
+    });
+}
+
 function showLoginForm() {
     // Create a modal container div
     var modalHtml = `
@@ -121,13 +275,14 @@ function login(username, password) {
         },
         success: function(response) {
             console.log('Login success:', response);
-            alert(response);
+            alert(response); // Display success message
             window.location.href = '/';
             checkLoggedIn();
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-            alert("Error: " + error);
+            var errorMessage = xhr.responseJSON ? xhr.responseJSON.error : "An error occurred while logging in.";
+            alert("Login failed: " + errorMessage); // Display error message
         }
     });
 }
@@ -142,13 +297,14 @@ function signup(username, password) {
         },
         success: function(response) {
             console.log('Signup success:', response);
-            alert(response);
+            alert(response); // Display success message
             window.location.href = '/';
             checkLoggedIn();
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-            alert("Error: " + error);
+            var errorMessage = xhr.responseJSON ? xhr.responseJSON.error : "An error occurred while signing up.";
+            alert("Signup failed: " + errorMessage); // Display error message
         }
     });
 }
@@ -163,7 +319,8 @@ function logout() {
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-            alert("Error: " + error);
+            var errorMessage = xhr.responseJSON ? xhr.responseJSON.error : "An error occurred while logging out.";
+            alert("Logout failed: " + errorMessage); // Display error message
         }
     });
 }
@@ -208,6 +365,7 @@ function searchTopics(searchTerm) {
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
+            alert("Search failed: " + error); // Display error message
         }
     });
 }
@@ -259,4 +417,12 @@ function displaySearchResults(results) {
         $('#searchResultsModal').hide();
         $('#searchResultsModal').remove();
     });
+}
+
+function sanitizeInput(input) {
+    return input.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
 }
