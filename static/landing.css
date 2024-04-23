@@ -104,26 +104,23 @@ nav {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 25vh;
-    padding: 20px;
+    height: 20%;
+    padding: 5px;
 }
 
 .container h1 {
     font-size: 45px;
-    margin-top: 100px;
-    margin-bottom: 200px;
+    margin-top: 10px;
+    margin-bottom: 30px;
     text-align: center;
     padding-bottom: 20px;
 }
 
 /* TOPICS SECTION */
 .topicCarousel {
-    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 75vh;
-    padding: 20px;
 }
 
 footer {
@@ -133,6 +130,10 @@ footer {
     justify-content: center;
     background: #1a202c;
     color: #a0aec0;
+}
+
+#topicCards {
+    height: 60%;
 }
 
 #topicCards:hover {
@@ -225,4 +226,11 @@ footer {
     flex-direction: column;
     height: 100%;
     
+}
+
+#addTopicForm {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    padding: 10px;
 }

@@ -80,8 +80,6 @@ function setupSearch() {
     });
 }
 
-
-
 function addTopic(topicName, postingUser) {
     $.ajax({
         url: '/add_topic',
@@ -128,10 +126,44 @@ function renderTopics(topics) {
 
     $('#topicCards').empty();
 
+    // Array of topic objects with image URLs
+    var topicImages = [
+        { topicName: "Computer Science", imageUrl: "static/img/compsci.png" },
+        { topicName: "Physics", imageUrl: "static/img/physics.jpg" },
+        { topicName: "Gaming", imageUrl: "static/img/gaming.jpg" },
+        { topicName: "ESports", imageUrl: "static/img/esport.jpg" },
+        { topicName: "Football", imageUrl: "static/img/football.jpg" },
+        { topicName: "Dota 2", imageUrl: "static/img/dota.jpg" },
+        { topicName: "Fishing", imageUrl: "static/img/fish.jpg" },
+        { topicName: "Water", imageUrl: "static/img/water.jpg" },
+        { topicName: "Ice Hockey", imageUrl: "static/img/hockey.jpg" },
+        { topicName: "keyboards", imageUrl: "static/img/keyboard.jpg" },
+        { topicName: "Laptops", imageUrl: "static/img/laptop.jpg" },
+        { topicName: "EU", imageUrl: "static/img/eu.jpg" },
+        { topicName: "Reading", imageUrl: "static/img/reading.jpg" },
+        { topicName: "India", imageUrl: "static/img/india.jpg" },
+        { topicName: "Smoking", imageUrl: "static/img/smoking.jpg" },
+        { topicName: "Clothing", imageUrl: "static/img/clothing.jpg" },
+    
+        // Add more topic objects as needed
+    ];
+
+    // Function to find the image URL based on topic name
+function getImageUrl(topicName) {
+    for (var i = 0; i < topicImages.length; i++) {
+        if (topicImages[i].topicName === topicName) {
+            return topicImages[i].imageUrl;
+        }
+    }
+    // Return a default image URL if the topic name is not found
+    return "static/img/default.jpg";
+}
+
     topics.forEach(function(topic, index) {
+        var imageUrl = getImageUrl(topic.topicName);
         var topicCard = $('<div class="topicCard" id="topicCard' + index + '">' +
                             '<div class="topicImage">' +
-                                '<img src="' + topic.imageUrl + '" alt="' + topic.topicName + '">' +
+                                '<img src="' + imageUrl + '" alt="' + topic.topicName + '">' +
                             '</div>' +
                             '<div class="topicInfo">' +
                                 '<h3 class=""topicName>'+ topic.topicName + '</h3>' +
@@ -144,16 +176,15 @@ function renderTopics(topics) {
 
     $('#topicCards').css({
         'display': 'grid',
-        'grid-template-columns': 'repeat(4, 1fr)',
+        'grid-template-columns': 'repeat(6, 1fr)',
         'grid-template-rows': 'repeat(3, 1fr)',
         'gap': '40px',
         'padding': '30px',
-        'padding-top': '900px',
     });
 
     $('.topicCard').css({
         'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
-        'padding': '50px',
+        'padding': '15px',
         'border-radius': '5px',
         'display': 'flex',
     });
@@ -169,7 +200,7 @@ function renderTopics(topics) {
 
     $('.topicImage img').css({
         'width': '100%',
-        'height': 'auto',
+        'height': '100%',
         'max-height': '100%',
         'object-fit': 'cover',
     });
@@ -179,7 +210,7 @@ function renderTopics(topics) {
     $('.topicCard').hover(
         function() {
             $(this).css({
-                'transform': 'scale(1.001)',
+                'transform': 'scale(1)',
                 'border': '2px solid',
                 'border-color': 'rgba(255, 246, 143, 1)',
             });
