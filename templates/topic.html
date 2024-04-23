@@ -11,7 +11,7 @@
 <body>
     <nav>
         <div class="title">
-            <a href="/">Conversely</a>
+            <a href="/"><b>Conversely</b></a>
         </div>
             <!-- <div id="searchBar" class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search topics or claims">
@@ -20,10 +20,10 @@
         
         <div id="authLinks" class="auth-links">
             {% if session.logged_in %}
-                <button><a href="#" id="logoutLink">Logout</a></button>
+                <button><a href="#" id="logoutLink"><b>Logout</b></a></button>
             {% else %}
-                <button><a href="#" id="loginLink">Login</a></button>
-                <button><a href="#" id="signupLink">Sign Up</a></button>
+                <button><a href="#" id="loginLink"><b>Login</b></a></button>
+                <button><a href="#" id="signupLink"><b>Sign Up</b></a></button>
             {% endif %}
         </div>
     </nav>
@@ -31,7 +31,7 @@
     <div id="authForms"></div>
 
     <div class="topicHeader">
-        <h1>{% if topic_name %}{{ topic_name }}{% else %}Topic Name{% endif %}</h1> 
+        <h1><b>{% if topic_name %}{{ topic_name }}{% else %}Topic Name{% endif %}</b></h1> 
     </div>
 
     <div class="addClaimForm" data-topic="{% if topic_name %}{{ topic_name }}{% endif %}">
