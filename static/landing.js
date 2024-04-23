@@ -144,8 +144,6 @@ function renderTopics(topics) {
         { topicName: "India", imageUrl: "static/img/india.jpg" },
         { topicName: "Smoking", imageUrl: "static/img/smoking.jpg" },
         { topicName: "Clothing", imageUrl: "static/img/clothing.jpg" },
-    
-        // Add more topic objects as needed
     ];
 
     // Function to find the image URL based on topic name
