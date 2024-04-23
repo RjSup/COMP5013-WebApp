@@ -1,5 +1,6 @@
 $(document).ready(function() {
     console.log('Landing ready');
+    getTopics();
     setupAuthLinks();
     setupSearch();
 });
@@ -60,7 +61,7 @@ function getTopics() {
             alert("Failed to get topics:" + xhr.responseText);
         }
     });
-}
+}   
 
 function renderTopics(topics) {
     if (!topics || topics.length === 0) {
