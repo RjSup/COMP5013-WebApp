@@ -113,6 +113,7 @@ nav {
     margin-top: 100px;
     margin-bottom: 200px;
     text-align: center;
+    padding-bottom: 20px;
 }
 
 /* TOPICS SECTION */
@@ -215,4 +216,13 @@ footer {
 
 .btn {
     width: 50px;
+}
+
+.topicCard {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    height: 100%;
+    
 }

@@ -130,45 +130,77 @@ function renderTopics(topics) {
 
     topics.forEach(function(topic, index) {
         var topicCard = $('<div class="topicCard" id="topicCard' + index + '">' +
-                            '<h3>'+ topic.topicName + '</h3>' +
-                            '<button class="topicButton" data-topic="' + topic.topicName + '">Join</button>' +
+                            '<div class="topicImage">' +
+                                '<img src="' + topic.imageUrl + '" alt="' + topic.topicName + '">' +
+                            '</div>' +
+                            '<div class="topicInfo">' +
+                                '<h3 class=""topicName>'+ topic.topicName + '</h3>' +
+                                '<button class="topicButton" data-topic="' + topic.topicName + '">Join</button>' +
+                            '</div>' +
                          '</div>');
 
         $('#topicCards').append(topicCard);
-        
-        $('#topicCards').css({
-            'display': 'grid',
-            'grid-template-columns': 'repeat(8, 1fr)',
-            'grid-template-rows': 'repeat(3, 1fr)',
-            'gap': '40px',
-            'padding': '60px',
-        });
-
-        $('.topicCard').css({
-            'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
-            'padding': '20px',
-            'border-radius': '5px',
-        });
-
-        $('.topicCard').hover(
-            function() {
-                $(this).css({
-                    'transform': 'scale(1.001)',
-                    'border': '2px solid',
-                    'border-color': 'rgba(255, 246, 143, 1)',
-                });
-            },
-            function() {
-                $(this).css({
-                    'transform': 'scale(1)',
-                    'border': 'none'
-                });
-            }
-        );
     });
+
+    $('#topicCards').css({
+        'display': 'grid',
+        'grid-template-columns': 'repeat(4, 1fr)',
+        'grid-template-rows': 'repeat(3, 1fr)',
+        'gap': '40px',
+        'padding': '30px',
+        'padding-top': '900px',
+    });
+
+    $('.topicCard').css({
+        'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
+        'padding': '50px',
+        'border-radius': '5px',
+        'display': 'flex',
+    });
+
+    $('.topicName').css({
+        'display': 'flex',
+        'justify-content': 'flex-start',
+    });
+
+    $('.topicImage').css({
+        'flex': '1',
+    });
+
+    $('.topicImage img').css({
+        'width': '100%',
+        'height': 'auto',
+        'max-height': '100%',
+        'object-fit': 'cover',
+    });
+
+    
+
+    $('.topicCard').hover(
+        function() {
+            $(this).css({
+                'transform': 'scale(1.001)',
+                'border': '2px solid',
+                'border-color': 'rgba(255, 246, 143, 1)',
+            });
+        },
+        function() {
+            $(this).css({
+                'transform': 'scale(1)',
+                'border': 'none'
+            });
+        }
+    );
 
     $('.topicButton').click(function() {
         var topicName = $(this).data('topic');
         window.location.href = '/topic/' + encodeURIComponent(topicName);
+    });
+
+    $('.topicButton').css({
+        'padding': '10px',
+        'border': 'none',
+        'border-radius': '5px',
+        'cursor': 'pointer',
     });
 }
