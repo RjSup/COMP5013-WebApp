@@ -1,10 +1,7 @@
 $(document).ready(function() {
     console.log('Landing ready');
-    getTopics(); 
     setupAuthLinks();
-    setupAddTopicForm();
     setupSearch();
-    checkLoggedIn();
 });
 
 function setupAuthLinks() {
@@ -24,59 +21,6 @@ function setupAuthLinks() {
         e.preventDefault();
         console.log('Logout link clicked');
         logout();
-    });
-}
-
-function setupAddTopicForm() {
-    $('#addTopicForm').submit(function(event) {
-        event.preventDefault();
-        var topicName = $('#topicName').val();
-        $.ajax({
-            url: '/check-login',
-            type: 'GET',
-            success: function(response) {
-                console.log('Check login success:', response);
-                if (response.logged_in && response.is_admin) {
-                    addTopic(topicName);
-                } else {
-                    console.log('Not logged in or not admin:', response);
-                    showLoginForm();
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error:", error);
-            }
-        });
-    });
-}
-
-function setupSearch() {
-    $('#searchBtn').click(function() {
-        getTopics();
-        var searchTerm = $('#searchInput').val();
-        if (searchTerm.trim() !== '') { // Check if the search term is not empty or whitespace
-            // Perform the search using AJAX
-            $.ajax({
-                type: 'GET',
-                url: '/search',
-                data: {
-                    term: searchTerm
-                },
-                success: function(response) {
-                    console.log('Search success:', response);
-                    // Display search results
-                    displaySearchResults(response.results);
-                    // Clear the search input field
-                    $('#searchInput').val('');
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                    alert("Search failed: " + error); // Display error message
-                }
-            });
-        } else {
-            alert("Please enter a search term.");
-        }
     });
 }
 

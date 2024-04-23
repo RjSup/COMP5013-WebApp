@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log('Landing ready');
+    console.log('Common');
     getTopics(); 
     setupAuthLinks();
     setupAddTopicForm();
@@ -53,102 +53,31 @@ function setupAddTopicForm() {
 
 function setupSearch() {
     $('#searchBtn').click(function() {
+        getTopics();
         var searchTerm = $('#searchInput').val();
         if (searchTerm.trim() !== '') { // Check if the search term is not empty or whitespace
-            searchTopics(searchTerm);
+            // Perform the search using AJAX
+            $.ajax({
+                type: 'GET',
+                url: '/search',
+                data: {
+                    term: searchTerm
+                },
+                success: function(response) {
+                    console.log('Search success:', response);
+                    // Display search results
+                    displaySearchResults(response.results);
+                    // Clear the search input field
+                    $('#searchInput').val('');
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("Search failed: " + error); // Display error message
+                }
+            });
         } else {
             alert("Please enter a search term.");
         }
-    });
-}
-
-function addTopic(topicName, postingUser) {
-    $.ajax({
-        url: '/add_topic',
-        type: 'POST',
-        data: {
-            topicName: topicName,
-            postingUser: postingUser
-        },
-        success: function(response) {
-            console.log('Add topic success:', response);
-            getTopics(); // Fetch updated topics from the server
-            $('#topicId').val('');
-            $('#topicName').val('');
-            $('#postingUser').val('');
-        },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-            alert("Failed to add topic: " + error); // Display error message
-        }
-    });
-}
-
-function getTopics() {
-    $.ajax({
-        type: 'GET',
-        url: '/fetch_topics',
-        success: function(response) {
-            console.log('Fetch topics success:', response);
-            renderTopics(response.topics);
-        },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-            alert("Failed to get topics: " + error); // Display error message
-        }
-    });
-}
-
-function renderTopics(topics) {
-    if (!topics || topics.length === 0) {
-        console.log("No topics found in response");
-        return;
-    }
-
-    $('#topicCards').empty();
-
-    topics.forEach(function(topic, index) {
-        var topicCard = $('<div class="topicCard" id="topicCard' + index + '">' +
-                            '<h3>'+ topic.topicName + '</h3>' +
-                            '<button class="topicButton" data-topic="' + topic.topicName + '">Join</button>' +
-                         '</div>');
-
-        $('#topicCards').append(topicCard);
-        
-        $('#topicCards').css({
-            'display': 'grid',
-            'grid-template-columns': 'repeat(8, 1fr)',
-            'grid-template-rows': 'repeat(3, 1fr)',
-            'gap': '40px',
-            'padding': '60px',
-        });
-
-        $('.topicCard').css({
-            'box-shadow': '0 0 15px rgba(0, 0, 0, 0.2)',
-            'padding': '20px',
-            'border-radius': '5px',
-        });
-
-        $('.topicCard').hover(
-            function() {
-                $(this).css({
-                    'transform': 'scale(1.001)',
-                    'border': '2px solid',
-                    'border-color': 'rgba(255, 246, 143, 1)',
-                });
-            },
-            function() {
-                $(this).css({
-                    'transform': 'scale(1)',
-                    'border': 'none'
-                });
-            }
-        );
-    });
-
-    $('.topicButton').click(function() {
-        var topicName = $(this).data('topic');
-        window.location.href = '/topic/' + encodeURIComponent(topicName);
     });
 }
 
