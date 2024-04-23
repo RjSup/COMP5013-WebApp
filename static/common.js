@@ -274,9 +274,6 @@ function checkLoggedIn() {
                 $('#addTopicForm').hide(); // Hide add topic form for non-logged in users
             }
         },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-        }
     });
 }
 
