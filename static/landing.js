@@ -167,7 +167,7 @@ function renderTopics(topics) {
   $(".topicImage img").hover(
     function () {
       $(this).css({
-        transform: "scale(1.13",
+        transform: "scale(1.07)",
         "border-radius": "5px",
       });
     },
