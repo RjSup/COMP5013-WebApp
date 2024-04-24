@@ -41,7 +41,7 @@ function addTopic(topicName, postingUser) {
       $("#topicName").val("");
       $("#postingUser").val("");
     },
-    error: function (xhr, status, error) {
+    error: function (xhr, _status, error) {
       console.error("Error:", error);
       alert("Failed to add topic: " + xhr.responseText);
     },
@@ -56,7 +56,7 @@ function getTopics() {
       console.log("Fetch topics success:", response);
       renderTopics(response.topics);
     },
-    error: function (xhr, status, error) {
+    error: function (xhr, _status, error) {
       console.error("Error:", error);
       alert("Failed to get topics:" + xhr.responseText);
     },
