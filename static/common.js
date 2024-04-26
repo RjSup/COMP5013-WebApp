@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    document.querySelector(".year").textContent = (new Date().getFullYear());
     console.log('Common');
     setupAuthLinks();
     setupAddTopicForm();
