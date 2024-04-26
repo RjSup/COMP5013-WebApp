@@ -160,7 +160,7 @@ function renderClaims(claims) {
       "grid-template-rows": "repeat(" + numRows + ", 1fr)",
       gap: "40px",
       padding: "20px",
-      "height": "500px",
+      "height": "fit-content",
       width: "100%", // Occupy full width
       justifyContent: "center", // Center cards horizontally
   });
@@ -171,7 +171,7 @@ function renderClaims(claims) {
           "<div class='claim-text'>" +
           "<p>" + claim.claimText + "</p>" +
           "</div>" +
-          "<div class='posting-user'>Posting User: " +
+          "<div class='posting-user'>Posted by: " +
           claim.postingUser +
           "</div>" +
           "</div>",
@@ -207,8 +207,14 @@ function renderClaims(claims) {
 
       // Add spacing between claim text and posting user
       claimElement.find(".claim-text").css({
-          marginBottom: "40px",
+          marginBottom: "60px",
       });
+      claimElement.find(".claim-text p").css({
+          "font-size": "20px",
+    })
+    claimElement.find(".posting-user p").css({
+      "font-size": "15px",
+  });
 
       $cardGrid.append(claimElement);
   });
