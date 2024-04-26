@@ -149,50 +149,68 @@ function fetchClaims(topicName) {
 function renderClaims(claims) {
   var $cardGrid = $("#card-grid").empty();
 
-  claims.forEach(function (claim, index) {
-    var claimElement = $(
-      '<div class="card">' +
-        "<p>" +
-        claim.claimText +
-        "<p>" +
-        "<p>Posting User: " +
-        claim.postingUser +
-        "</p>" +
-        "</div>",
-    );
+  // Calculate the number of columns and rows for the grid
+  var numColumns = 6;
+  var numRows = Math.ceil(claims.length / numColumns);
 
-    $cardGrid.append(claimElement);
-    $("#card-grid").css({
+  // Set up grid layout
+  $cardGrid.css({
       display: "grid",
-      "grid-template-columns": "repeat(3, 1fr)",
-      "grid-template-rows": "repeat(3, 1fr)",
+      "grid-template-columns": "repeat(" + numColumns + ", 1fr)",
+      "grid-template-rows": "repeat(" + numRows + ", 1fr)",
       gap: "40px",
       padding: "20px",
-    });
+      "height": "500px",
+      width: "100%", // Occupy full width
+      justifyContent: "center", // Center cards horizontally
+  });
 
-    claimElement.css({
-      "background-color": "white",
-      "border-radius": "8px",
-      padding: "20px",
-      "box-shadow": "0 0 10px rgba(0, 0, 0, 0.1)",
-      cursor: "pointer",
-    });
+  claims.reverse().forEach(function (claim, index) {
+      var claimElement = $(
+          '<div class="card">' +
+          "<div class='claim-text'>" +
+          "<p>" + claim.claimText + "</p>" +
+          "</div>" +
+          "<div class='posting-user'>Posting User: " +
+          claim.postingUser +
+          "</div>" +
+          "</div>",
+      );
 
-    claimElement.hover(
-      function () {
-        $(this).css({
-          transform: "scale(1.01)",
-          border: "2px solid",
-          "border-color": "#1a202c",
-        });
-      },
-      function () {
-        $(this).css({
-          transform: "scale(1)",
-          border: "none",
-        });
-      },
-    );
+      claimElement.css({
+          "background-color": "white",
+          "border-radius": "8px",
+          padding: "20px",
+          "box-shadow": "0 0 10px rgba(0, 0, 0, 0.1)",
+          cursor: "pointer",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%", // Ensure each card takes up equal height
+      });
+
+      claimElement.hover(
+          function () {
+              $(this).css({
+                  transform: "scale(1.01)",
+                  border: "2px solid",
+                  "border-color": "#1a202c",
+              });
+          },
+          function () {
+              $(this).css({
+                  transform: "scale(1)",
+                  border: "none",
+              });
+          },
+      );
+
+      // Add spacing between claim text and posting user
+      claimElement.find(".claim-text").css({
+          marginBottom: "40px",
+      });
+
+      $cardGrid.append(claimElement);
   });
 }
 
@@ -237,7 +255,7 @@ function fetchReplies(topicName, claimText) {
 function renderReplies(replies) {
   var $claimReplies = $("#claimReplies").empty();
 
-  replies.forEach(function (reply) {
+  replies.reverse().forEach(function (reply) {
     var replyElement = $('<div class="reply"></div>'); // Container for entire reply
 
     // Main comment text

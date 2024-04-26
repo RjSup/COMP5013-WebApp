@@ -241,6 +241,7 @@ def fetch_topics():
                 SELECT topic.topicName, user.userName 
                 FROM topic 
                 JOIN user ON topic.postingUser = user.userID
+                ORDER BY topic.updateTime DESC
             """)
             topics = [{'topicName': row[0], 'postingUser': row[1]}
                       for row in c.fetchall()]
@@ -269,6 +270,7 @@ def fetch_claims(topic_name):
                 FROM claim 
                 JOIN user ON claim.postingUser = user.userID 
                 WHERE claim.topic = ?
+                ORDER BY claim.updateTime DESC
             """, (topic_name,))
             claims = [{'topic': row[0], 'postingUser': row[1],
                        'claimText': row[2]} for row in c.fetchall()]
@@ -386,6 +388,7 @@ def submit_reply():
         return "Invalid request method"
 
 
+
 @app.route("/fetch_replies/<topic_name>")
 def fetch_replies(topic_name):
     # Get the claim text from the request
@@ -395,12 +398,13 @@ def fetch_replies(topic_name):
         try:
             c = conn.cursor()
             c.execute("""
-                SELECT reply.text, user.userName, rel.replyToClaimRelType 
+                SELECT reply.text, user.userName, rel.replyToClaimRelType, reply.updateTime 
                 FROM replyText AS reply 
                 JOIN replyToClaim AS rel ON reply.replyTextID = rel.replyToClaimID 
                 JOIN claim ON claim.text = rel.claim 
                 JOIN user ON reply.postingUser = user.userID
                 WHERE claim.topic = ? AND claim.text = ?
+                ORDER BY reply.updateTime DESC
             """, (topic_name, claim_text))
             replies = [{'text': row[0], 'postingUser': row[1],
                         'replyType': row[2]} for row in c.fetchall()]
