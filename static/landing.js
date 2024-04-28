@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  console.log("Landing ready");
+  console.log("Landing.js loaded and ready");
   getTopics();
   setupAuthLinks();
   setupSearch();
@@ -90,7 +90,10 @@ function renderTopics(topics) {
     { topicName: "Smoking", imageUrl: "static/img/smoking.jpg" },
     { topicName: "Clothing", imageUrl: "static/img/clothing.jpg" },
     { topicName: "University", imageUrl: "static/img/uni.jpg" },
-    { topicName: "Electric Vehicles", imageUrl: "static/img/electricvehicle.jpg" },
+    {
+      topicName: "Electric Vehicles",
+      imageUrl: "static/img/electricvehicle.jpg",
+    },
   ];
 
   // Function to find the image URL based on topic name

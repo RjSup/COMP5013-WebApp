@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  console.log("Topics ready");
+  console.log("Topic.js loaded and ready");
   checkLoggedIn();
   setupAuthLinks();
   setupTopicPage();
@@ -155,68 +155,70 @@ function renderClaims(claims) {
 
   // Set up grid layout
   $cardGrid.css({
-      display: "grid",
-      "grid-template-columns": "repeat(" + numColumns + ", 1fr)",
-      "grid-template-rows": "repeat(" + numRows + ", 1fr)",
-      gap: "40px",
-      padding: "20px",
-      "height": "fit-content",
-      width: "100%", // Occupy full width
-      justifyContent: "center", // Center cards horizontally
+    display: "grid",
+    "grid-template-columns": "repeat(" + numColumns + ", 1fr)",
+    "grid-template-rows": "repeat(" + numRows + ", 1fr)",
+    gap: "40px",
+    padding: "20px",
+    height: "fit-content",
+    width: "100%", // Occupy full width
+    justifyContent: "center", // Center cards horizontally
   });
 
   claims.reverse().forEach(function (claim, index) {
-      var claimElement = $(
-          '<div class="card">' +
-          "<div class='claim-text'>" +
-          "<p>" + claim.claimText + "</p>" +
-          "</div>" +
-          "<div class='posting-user'>Posted by: " +
-          claim.postingUser +
-          "</div>" +
-          "</div>",
-      );
+    var claimElement = $(
+      '<div class="card">' +
+        "<div class='claim-text'>" +
+        "<p>" +
+        claim.claimText +
+        "</p>" +
+        "</div>" +
+        "<div class='posting-user'>Posted by: " +
+        claim.postingUser +
+        "</div>" +
+        "</div>",
+    );
 
-      claimElement.css({
-          "background-color": "#f4f4f4",
-          "border-radius": "8px",
-          padding: "20px",
-          "box-shadow": "0 0 15px rgba(0, 0, 0, 0.2)",
-          cursor: "pointer",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          height: "100%", // Ensure each card takes up equal height
-      });
+    claimElement.css({
+      "background-color": "#f4f4f4",
+      "border-radius": "8px",
+      padding: "20px",
+      "box-shadow": "0 0 15px rgba(0, 0, 0, 0.2)",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      height: "100%", // Ensure each card takes up equal height
+    });
 
-      claimElement.hover(
-          function () {
-              $(this).css({
-                  transform: "scale(1.01)",
-                  border: "2px solid",
-                  "border-color": "#1a202c",
-              });
-          },
-          function () {
-              $(this).css({
-                  transform: "scale(1)",
-                  border: "none",
-              });
-          },
-      );
+    claimElement.hover(
+      function () {
+        $(this).css({
+          transform: "scale(1.01)",
+          border: "2px solid",
+          "border-color": "#1a202c",
+        });
+      },
+      function () {
+        $(this).css({
+          transform: "scale(1)",
+          border: "none",
+        });
+      },
+    );
 
-      // Add spacing between claim text and posting user
-      claimElement.find(".claim-text").css({
-          marginBottom: "60px",
-      });
-      claimElement.find(".claim-text p").css({
-          "font-size": "20px",
-    })
+    // Add spacing between claim text and posting user
+    claimElement.find(".claim-text").css({
+      marginBottom: "60px",
+    });
+    claimElement.find(".claim-text p").css({
+      "font-size": "20px",
+    });
     claimElement.find(".posting-user p").css({
       "font-size": "15px",
-  });
+    });
 
-      $cardGrid.append(claimElement);
+    $cardGrid.append(claimElement);
   });
 }
 
@@ -358,7 +360,7 @@ function renderReplies(replies) {
 
     // Add spacing and border around each reply
     replyElement.css({
-      "background": "#f4f4f4",
+      background: "#f4f4f4",
       border: "1px solid #ccc",
       padding: "10px",
       "border-radius": "5px",
