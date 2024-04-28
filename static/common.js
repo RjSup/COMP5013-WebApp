@@ -52,8 +52,7 @@ function setupAddTopicForm() {
 }
 
 function setupSearch() {
-    $('#searchBtn').click(function() {
-        getTopics();
+    $('#searchBtn').on('click', function() {
         var searchTerm = $('#searchInput').val();
         if (searchTerm.trim() !== '') { // Check if the search term is not empty or whitespace
             // Perform the search using AJAX
@@ -84,18 +83,20 @@ function setupSearch() {
 function showLoginForm() {
     // Create a modal container div
     var modalHtml = `
-        <div id="loginModal" class="modal2 common-model">
+        <div id="loginModal" class="modal2 common-model" role="dialog" aria-labelledby="loginModalTitle" aria-describedby="loginModalDescription">
             <div class="modal-content2">
-                <span class="close">&times;</span>
-                <h2>Login</h2>
-                <form id="loginForm">
+                <button class="close" aria-label="Close Login Modal">&times;</button>
+                <h2 id="loginModalTitle">Login</h2>
+                <form id="loginForm" aria-label="Login Form" autocomplete="off">
                     <div class="form-group">
                         <label for="loginUsername">Username</label>
-                        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your username" required>
+                        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your username" required aria-required="true" aria-describedby="usernameError">
+                        <div id="usernameError" class="error" role="alert" aria-live="assertive" aria-hidden="true"></div>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required aria-required="true" aria-describedby="passwordError">
+                        <div id="passwordError" class="error" role="alert" aria-live="assertive" aria-hidden="true"></div>
                     </div>
                     <button type="submit" class="btn">Login</button>
                 </form>
@@ -141,18 +142,20 @@ function showLoginForm() {
 function showSignupForm() {
     // Create a modal container div
     var modalHtml = `
-        <div id="signupModal" class="modal2 common-model">
+        <div id="signupModal" class="modal2 common-model" role="dialog" aria-labelledby="signupModalTitle" aria-describedby="signupModalDescription">
             <div class="modal-content2">
-                <span class="close">&times;</span>
-                <h2>Sign Up</h2>
-                <form id="signupForm">
+                <button class="close" aria-label="Close Signup Modal">&times;</button>
+                <h2 id="signupModalTitle">Sign Up</h2>
+                <form id="signupForm" aria-label="Signup Form" autocomplete="off">
                     <div class="form-group">
                         <label for="signupUsername">Username</label>
-                        <input type="text" id="signupUsername" class="form-control" placeholder="Enter your username" required>
+                        <input type="text" id="signupUsername" class="form-control" placeholder="Enter your username" required aria-required="true" aria-describedby="usernameError">
+                        <div id="usernameError" class="error" role="alert" aria-live="assertive" aria-hidden="true"></div>
                     </div>
                     <div class="form-group">
                         <label for="signupPassword">Password</label>
-                        <input type="password" id="signupPassword" class="form-control" placeholder="Enter your password" required>
+                        <input type="password" id="signupPassword" class="form-control" placeholder="Enter your password" required aria-required="true" aria-describedby="passwordError">
+                        <div id="passwordError" class="error" role="alert" aria-live="assertive" aria-hidden="true"></div>
                     </div>
                     <button type="submit" class="btn">Sign Up</button>
                 </form>
@@ -308,15 +311,6 @@ function displaySearchResults(results) {
         modalContent += '<ul>';
         results.topics.forEach(function(topic) {
             modalContent += '<li><a href="/topic/' + encodeURIComponent(topic.topicName) + '">' + topic.topicName + '</a></li>';
-        });
-        modalContent += '</ul>';
-    }
-
-    if (results.claims.length > 0) {
-        modalContent += '<h3>Claims</h3>';
-        modalContent += '<ul>';
-        results.claims.forEach(function(claim) {
-            modalContent += '<li><a href="#">' + claim.text + '</a></li>';
         });
         modalContent += '</ul>';
     }

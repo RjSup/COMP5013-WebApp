@@ -81,47 +81,61 @@
                 <span class="close">&times;</span>
                 <h2>Claim Details</h2>
                 <p id="claimDetail"></p>
-                <form id="replyForm">
-                    <textarea
-                        id="replyText"
-                        rows="5"
-                        cols="50"
-                        placeholder="Your reply..."
-                        required
-                    ></textarea>
-                    <input
-                        type="radio"
-                        id="clarificationReply"
-                        name="replyType"
-                        value="1"
-                        required
-                    />
-                    <label for="clarificationReply">Clarification</label>
-                    <input
-                        type="radio"
-                        id="supportingArgumentReply"
-                        name="replyType"
-                        value="2"
-                        required
-                    />
-                    <label for="supportingArgumentReply"
-                        >Supporting Argument</label
-                    >
-                    <input
-                        type="radio"
-                        id="counterargumentReply"
-                        name="replyType"
-                        value="3"
-                        required
-                    />
-                    <label for="counterargumentReply">Counterargument</label>
-                    <button class="btnbtn" ="submit">Submit Reply</button>
-                    <input
-                        type="hidden"
-                        id="topicName"
-                        value="{% if topic_name %}{{ topic_name }}{% endif %}"
-                    />
-                </form>
+                ...
+<form id="replyForm">
+    <label for="replyText">Your reply:</label>
+    <textarea
+        id="replyText"
+        rows="5"
+        cols="50"
+        placeholder="Your reply..."
+        required
+        aria-describedby="replyTextHelp"
+    ></textarea>
+    <div id="replyTextHelp" class="form-text">Please provide your reply.</div>
+
+    <fieldset>
+        <legend>Type of Reply</legend>
+        <input
+            type="radio"
+            id="clarificationReply"
+            name="replyType"
+            value="1"
+            required
+            aria-labelledby="clarificationLabel"
+        />
+        <label id="clarificationLabel" for="clarificationReply">Clarification</label>
+
+        <input
+            type="radio"
+            id="supportingArgumentReply"
+            name="replyType"
+            value="2"
+            required
+            aria-labelledby="supportingArgumentLabel"
+        />
+        <label id="supportingArgumentLabel" for="supportingArgumentReply">Supporting Argument</label>
+
+        <input
+            type="radio"
+            id="counterargumentReply"
+            name="replyType"
+            value="3"
+            required
+            aria-labelledby="counterargumentLabel"
+        />
+        <label id="counterargumentLabel" for="counterargumentReply">Counterargument</label>
+    </fieldset>
+
+    <button type="submit">Submit Reply</button>
+    <input
+        type="hidden"
+        id="topicName"
+        value="{% if topic_name %}{{ topic_name }}{% endif %}"
+    />
+</form>
+...
+
 
                 <div id="claimReplies"></div>
             </div>

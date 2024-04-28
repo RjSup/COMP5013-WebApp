@@ -69,6 +69,77 @@
                     <!-- Display popular topics here -->
                 </div>
             </div>
+            <!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Conversely | Debate Forum</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='landing.css') }}"
+        />
+        <link
+            rel="shortcut icon"
+            href="{{ url_for('static', filename='favicon.ico') }}"
+        />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{{ url_for('static', filename='common.js') }}"></script>
+    </head>
+    <body>
+        <section id="landing">
+            <nav>
+                <div class="title">
+                    <a href="/"><b>Conversely</b></a>
+                </div>
+                <div id="searchBar" class="search-bar">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search topics"
+                    />
+                    <button id="searchBtn">Search</button>
+                </div>
+                <div id="searchResultsModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Search Results</h2>
+                        <div id="searchResultsList"></div>
+                    </div>
+                </div>
+                <div id="authLinks" class="auth-links">
+                    {% if session.logged_in %}
+                    <button>
+                        <a href="#" id="logoutLink"><b>Logout</b></a>
+                    </button>
+                    {% else %}
+                    <button>
+                        <a href="#" id="loginLink"><b>Login</b></a>
+                    </button>
+                    <button>
+                        <a href="#" id="signupLink"><b>Sign Up</b></a>
+                    </button>
+                    {% endif %}
+                </div>
+            </nav>
+
+            <div class="auth-form" id="authForms"></div>
+            <div class="container">
+                <h1>
+                    Welcome to <b><span>Conversely</span></b>
+                </h1>
+                <i
+                    ><u
+                        ><p>
+                            Your digital arena for the art of debate and
+                            discourse.
+                        </p></u
+                    ></i
+                >
+                <div id="popularTopics" class="popularTopics">
+                    <!-- Display popular topics here -->
+                </div>
+            </div>
             <div class="topicCarousel">
                 {% if session.logged_in %}
                 <form id="addTopicForm">
@@ -86,6 +157,14 @@
 
                 <div id="topicCards"></div>
             </div>
+            <footer class="footer">
+                <h3>Conversely <span class="year"></span></h3>
+            </footer>
+        </section>
+        <script src="{{ url_for('static', filename='landing.js') }}"></script>
+    </body>
+</html>
+
             <footer class="footer">
                 <h3>Conversely <span class="year"></span></h3>
             </footer>
