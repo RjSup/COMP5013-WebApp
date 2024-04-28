@@ -90,7 +90,6 @@ class TestApp(unittest.TestCase):
         self.assertIsNotNone(result)
         
     
-    # test the add_admin route
     def tearDown(self):
     # Connect to the database
         conn = connectDB()
