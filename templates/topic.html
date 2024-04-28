@@ -1,151 +1,141 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link
-            rel="stylesheet"
-            href="{{ url_for('static', filename='topics.css') }}"
-        />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <link
-            rel="shortcut icon"
-            href="{{ url_for('static', filename='favicon.ico') }}"
-        />
-        <title>
-            Conversely | {% if topic_name %}{{ topic_name }}{% else %}Topic
-            Name{% endif %}
-        </title>
-    </head>
-    <body>
-        <nav>
-            <div class="title">
-                <a href="/"><b>Conversely</b></a>
-            </div>
-            <!-- <div id="searchBar" class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search topics or claims">
-                <button id="searchBtn">Search</button>
-            </div> -->
-
-            <div id="authLinks" class="auth-links">
-                {% if session.logged_in %}
-                <button>
-                    <a href="#" id="logoutLink"><b>Logout</b></a>
-                </button>
-                {% else %}
-                <button>
-                    <a href="#" id="loginLink"><b>Login</b></a>
-                </button>
-                <button>
-                    <a href="#" id="signupLink"><b>Sign Up</b></a>
-                </button>
-                {% endif %}
-            </div>
-        </nav>
-
-        <div id="authForms"></div>
-
-        <div class="topicHeader">
-            <h1>
-                <b
-                    >{% if topic_name %}{{ topic_name }}{% else %}Topic Name{%
-                    endif %}</b
-                >
-            </h1>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='topics.css') }}"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+        rel="shortcut icon"
+        href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <title>
+        Conversely | {% if topic_name %}{{ topic_name }}{% else %}Topic
+        Name{% endif %}
+    </title>
+</head>
+<body>
+    <nav role="navigation" aria-label="Main Navigation">
+        <div class="title">
+            <a href="/"><b>Conversely</b></a>
         </div>
 
-        <div
-            class="addClaimForm"
-            data-topic="{% if topic_name %}{{ topic_name }}{% endif %}"
-        >
+        <div id="authLinks" class="auth-links">
             {% if session.logged_in %}
-            <textarea
-                id="claimText"
-                placeholder="Claim Text (maximum 250 characters)"
-                maxlength="250"
-                required
-            ></textarea>
-            <button id="addClaimButton">Add</button>
+            <button role="button" aria-haspopup="true" aria-expanded="false" aria-controls="authForms">
+                <a href="#" id="logoutLink"><b>Logout</b></a>
+            </button>
             {% else %}
-            <p>Sign in to add a claim</p>
+            <button role="button" aria-haspopup="true" aria-expanded="false" aria-controls="authForms">
+                <a href="#" id="loginLink"><b>Login</b></a>
+            </button>
+            <button role="button" aria-haspopup="true" aria-expanded="false" aria-controls="authForms">
+                <a href="#" id="signupLink"><b>Sign Up</b></a>
+            </button>
             {% endif %}
         </div>
+    </nav>
 
-        <div class="container">
-            <div id="card-grid"></div>
+    <div id="authForms"></div>
+
+    <div class="topicHeader">
+        <h1>
+            <b>{% if topic_name %}{{ topic_name }}{% else %}Topic Name{% endif %}</b>
+        </h1>
+    </div>
+
+    <div
+        class="addClaimForm"
+        data-topic="{% if topic_name %}{{ topic_name }}{% endif %}"
+    >
+        {% if session.logged_in %}
+        <textarea
+            id="claimText"
+            placeholder="Claim Text (maximum 250 characters)"
+            maxlength="250"
+            required
+        ></textarea>
+        <button id="addClaimButton">Add</button>
+        {% else %}
+        <p>Sign in to add a claim</p>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div id="card-grid"></div>
+    </div>
+
+    <!-- Popup modal structure -->
+    <div id="claimModal" class="modal" role="dialog" aria-labelledby="claimModalLabel" aria-describedby="claimDetail">
+        <div class="modal-content">
+            <span class="close" role="button" aria-label="Close">&times;</span>
+            <h2 id="claimModalLabel">Claim Details</h2>
+            <p id="claimDetail"></p>
+            <form id="replyForm">
+                <label for="replyText">Your reply:</label>
+                <textarea
+                    id="replyText"
+                    rows="5"
+                    cols="50"
+                    placeholder="Your reply..."
+                    required
+                    aria-labelledby="replyTextLabel"
+                ></textarea>
+                <div id="replyTextLabel" class="form-text">Please provide your reply.</div>
+
+                <fieldset>
+                    <legend>Type of Reply</legend>
+                    <input
+                        type="radio"
+                        id="clarificationReply"
+                        name="replyType"
+                        value="1"
+                        required
+                        aria-labelledby="clarificationLabel"
+                    />
+                    <label id="clarificationLabel" for="clarificationReply">Clarification</label>
+
+                    <input
+                        type="radio"
+                        id="supportingArgumentReply"
+                        name="replyType"
+                        value="2"
+                        required
+                        aria-labelledby="supportingArgumentLabel"
+                    />
+                    <label id="supportingArgumentLabel" for="supportingArgumentReply">Supporting Argument</label>
+
+                    <input
+                        type="radio"
+                        id="counterargumentReply"
+                        name="replyType"
+                        value="3"
+                        required
+                        aria-labelledby="counterargumentLabel"
+                    />
+                    <label id="counterargumentLabel" for="counterargumentReply">Counterargument</label>
+                </fieldset>
+
+                <button type="submit">Submit Reply</button>
+                <input
+                    type="hidden"
+                    id="topicName"
+                    value="{% if topic_name %}{{ topic_name }}{% endif %}"
+                />
+            </form>
+
+            <div id="claimReplies"></div>
         </div>
+    </div>
 
-        <!-- Popup modal structure -->
-        <div id="claimModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Claim Details</h2>
-                <p id="claimDetail"></p>
-                ...
-<form id="replyForm">
-    <label for="replyText">Your reply:</label>
-    <textarea
-        id="replyText"
-        rows="5"
-        cols="50"
-        placeholder="Your reply..."
-        required
-        aria-describedby="replyTextHelp"
-    ></textarea>
-    <div id="replyTextHelp" class="form-text">Please provide your reply.</div>
+    <footer class="footer" role="Footer">
+        <h3>Conversely <span class="year"></span></h3>
+    </footer>
 
-    <fieldset>
-        <legend>Type of Reply</legend>
-        <input
-            type="radio"
-            id="clarificationReply"
-            name="replyType"
-            value="1"
-            required
-            aria-labelledby="clarificationLabel"
-        />
-        <label id="clarificationLabel" for="clarificationReply">Clarification</label>
-
-        <input
-            type="radio"
-            id="supportingArgumentReply"
-            name="replyType"
-            value="2"
-            required
-            aria-labelledby="supportingArgumentLabel"
-        />
-        <label id="supportingArgumentLabel" for="supportingArgumentReply">Supporting Argument</label>
-
-        <input
-            type="radio"
-            id="counterargumentReply"
-            name="replyType"
-            value="3"
-            required
-            aria-labelledby="counterargumentLabel"
-        />
-        <label id="counterargumentLabel" for="counterargumentReply">Counterargument</label>
-    </fieldset>
-
-    <button type="submit">Submit Reply</button>
-    <input
-        type="hidden"
-        id="topicName"
-        value="{% if topic_name %}{{ topic_name }}{% endif %}"
-    />
-</form>
-...
-
-
-                <div id="claimReplies"></div>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <h3>Conversely <span class="year"></span></h3>
-        </footer>
-
-        <script src="{{ url_for('static', filename='topic.js') }}"></script>
-        <script src="{{ url_for('static', filename='common.js') }}"></script>
-    </body>
+    <script src="{{ url_for('static', filename='topic.js') }}"></script>
+    <script src="{{ url_for('static', filename='common.js') }}"></script>
+</body>
 </html>
