@@ -178,10 +178,10 @@ function renderClaims(claims) {
       );
 
       claimElement.css({
-          "background-color": "white",
+          "background-color": "#f4f4f4",
           "border-radius": "8px",
           padding: "20px",
-          "box-shadow": "0 0 10px rgba(0, 0, 0, 0.1)",
+          "box-shadow": "0 0 15px rgba(0, 0, 0, 0.2)",
           cursor: "pointer",
           display: "flex",
           flexDirection: "column",
@@ -358,6 +358,7 @@ function renderReplies(replies) {
 
     // Add spacing and border around each reply
     replyElement.css({
+      "background": "#f4f4f4",
       border: "1px solid #ccc",
       padding: "10px",
       "border-radius": "5px",

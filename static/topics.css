@@ -3,9 +3,17 @@
     box-sizing: border-box;
 }
 
+/** General Styles */
+body {
+    font-family: "Roboto", sans-serif;
+    line-height: 1.6;
+    background: #f4f4f4;
+}
+
 h2 {
     display: flex;
     justify-content: center;
+    color: #1a202c; /* Added color for better contrast */
 }
 
 #claimDetail {
@@ -17,7 +25,7 @@ h2 {
 
 nav {
     background: #1a202c;
-    color: #a0aec0;
+    color: #ffffff; /* Changed to white for better contrast */
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
@@ -27,12 +35,12 @@ nav {
 .title a {
     font-size: 24px;
     text-decoration: none;
-    color: #a0aec0;
+    color: #ffffff; /* Changed to white for better contrast */
     cursor: pointer;
 }
 
 .auth-links a {
-    color: #a0aec0;
+    color: #ffffff; /* Changed to white for better contrast */
     text-decoration: none;
     margin-left: 10px;
 }
@@ -51,7 +59,7 @@ nav {
 }
 
 .auth-form a {
-    color: #a0aec0;
+    color: #ffffff; /* Changed to white for better contrast */
     text-decoration: none;
 }
 
@@ -81,6 +89,7 @@ nav {
 .topicHeader h1 {
     text-align: center;
     margin-top: 20px;
+    color: #1a202c; /* Added color for better contrast */
 }
 
 .addClaimForm {
@@ -95,6 +104,7 @@ nav {
 .addClaimForm h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #1a202c; /* Added color for better contrast */
 }
 
 .addClaimForm input[type="text"], .addClaimForm textarea {
@@ -109,7 +119,7 @@ nav {
     width: 100%;
     padding: 10px;
     background: #1a202c;
-    color: #a0aec0;
+    color: #ffffff; /* Changed to white for better contrast */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -184,7 +194,7 @@ nav {
 
 /* Close button */
 .close {
-    color: #aaa;
+    color: #aaaaaa; /* Lightened for better contrast */
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -209,6 +219,7 @@ textarea {
     margin-top: 6px;
     margin-bottom: 16px;
     resize: vertical;
+    color: #1a202c; /* Added color for better contrast */
 }
 
 /* Modern button styles */
@@ -238,7 +249,7 @@ textarea {
 
 .btnbtn {
     background: #1a202c;
-    color: #a0aec0;
+    color: #ffffff; /* Changed to white for better contrast */
     padding: 5px;
     border-radius: 5px;
     text-decoration: none;
@@ -251,6 +262,6 @@ footer {
     display: flex;
     justify-content: center;
     background: #1a202c;
-    color: #a0aec0;
+    color: #ffffff; /* Changed to white for better contrast */
     height: 5%;
 }
