@@ -348,7 +348,6 @@ def search():
             return "Failed to perform the search. Please try again later.", 500
 
 
-
 @app.route("/submit_reply", methods=["POST"])
 def submit_reply():
     if request.method == "POST":
@@ -388,7 +387,6 @@ def submit_reply():
             return "Please log in to submit a reply"
     else:
         return "Invalid request method"
-
 
 
 @app.route("/fetch_replies/<topic_name>")
