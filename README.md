@@ -1,3 +1,12 @@
+# for testing.py
+
+• Test connection to the database on creation.
+• Test if user is an admin.
+• Ensure adding information from the from end is secure and valid.
+• Ensure the incoming information is stored appropriately in the required database.
+• Test authentication users.
+• Make sure the routes fetch and receive the data appropriately.
+
 # TROUBLES
 
 -- SEARCH FUCTION TO LINK TO CLAIMS
@@ -20,4 +29,4 @@
 
 -- GENERALLY CLEAN THE CODE -- MINIMIZE FUNCTIONS WHO BEHAVE SIMILAR ETC
 
--- 
+--
