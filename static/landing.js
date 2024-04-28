@@ -104,7 +104,7 @@ function renderTopics(topics) {
     return "static/img/default.jpg";
   }
 
-  topics.reverse().forEach(function (topic, index) {
+  topics.forEach(function (topic, index) {
     var imageUrl = getImageUrl(topic.topicName);
     var topicCard = $(
       '<div class="topicCard" id="topicCard' +

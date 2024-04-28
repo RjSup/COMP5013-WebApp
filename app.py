@@ -349,31 +349,33 @@ def search():
 
 
 
-# Add reply route to submit a reply to a claim
 @app.route("/submit_reply", methods=["POST"])
 def submit_reply():
     if request.method == "POST":
         if 'user_id' in session:
             reply_text = request.form.get('replyText')
-            posting_user = session['user_id']
-            creation_time = int(time.time())
             reply_type = request.form.get('replyType')
             topic_name = request.form.get('topicName')
 
-            # Basic form validation
-            if not reply_text or not reply_type:
-                return "Reply text and type are required", 400
+            # Basic validation: Check if required fields are present
+            if not (reply_text and reply_type and topic_name):
+                return "Reply text, reply type, and topic name are required", 400
+
+            # Additional validation can be performed here, such as checking reply text length or reply type validity
+
+            posting_user = session['user_id']
+            creation_time = int(time.time())
 
             conn = connectDB()
             if conn:
                 try:
                     c = conn.cursor()
-                    # Insert into replyToClaim table
+                    # Insert into replyText table
                     c.execute("INSERT INTO replyText (postingUser, creationTime, text) VALUES (?, ?, ?)",
                               (posting_user, creation_time, reply_text))
                     reply_to_claim_id = c.lastrowid  # Get the ID of the inserted row
 
-                    # Insert into replyToClaimType table
+                    # Insert into replyToClaim table
                     c.execute("INSERT INTO replyToClaim (replyToClaimID, reply, claim, replyToClaimRelType) VALUES (?, ?, ?, ?)",
                               (reply_to_claim_id, reply_text, topic_name, reply_type))
                     conn.commit()
@@ -398,13 +400,12 @@ def fetch_replies(topic_name):
         try:
             c = conn.cursor()
             c.execute("""
-                SELECT reply.text, user.userName, rel.replyToClaimRelType, reply.updateTime 
+                SELECT reply.text, user.userName, rel.replyToClaimRelType
                 FROM replyText AS reply 
                 JOIN replyToClaim AS rel ON reply.replyTextID = rel.replyToClaimID 
                 JOIN claim ON claim.text = rel.claim 
                 JOIN user ON reply.postingUser = user.userID
                 WHERE claim.topic = ? AND claim.text = ?
-                ORDER BY reply.updateTime DESC
             """, (topic_name, claim_text))
             replies = [{'text': row[0], 'postingUser': row[1],
                         'replyType': row[2]} for row in c.fetchall()]
