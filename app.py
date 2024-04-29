@@ -27,6 +27,7 @@ def connectDB():
     try:
         conn = sqlite3.connect('debate.sqlite')
         conn.row_factory = sqlite3.Row
+        print("SQLite connection established")
         return conn
     except sqlite3.Error as e:
         print("SQLite connection error:", e)
@@ -238,8 +239,8 @@ def fetch_topics():
         try:
             c = conn.cursor()
             c.execute("""
-                SELECT topic.topicName, user.userName 
-                FROM topic 
+                SELECT topic.topicName, user.userName
+                FROM topic
                 JOIN user ON topic.postingUser = user.userID
                 ORDER BY topic.updateTime DESC
             """)
@@ -266,9 +267,9 @@ def fetch_claims(topic_name):
         try:
             c = conn.cursor()
             c.execute("""
-                SELECT claim.topic, user.userName, claim.text 
-                FROM claim 
-                JOIN user ON claim.postingUser = user.userID 
+                SELECT claim.topic, user.userName, claim.text
+                FROM claim
+                JOIN user ON claim.postingUser = user.userID
                 WHERE claim.topic = ?
                 ORDER BY claim.updateTime DESC
             """, (topic_name,))
@@ -399,9 +400,9 @@ def fetch_replies(topic_name):
             c = conn.cursor()
             c.execute("""
                 SELECT reply.text, user.userName, rel.replyToClaimRelType
-                FROM replyText AS reply 
-                JOIN replyToClaim AS rel ON reply.replyTextID = rel.replyToClaimID 
-                JOIN claim ON claim.text = rel.claim 
+                FROM replyText AS reply
+                JOIN replyToClaim AS rel ON reply.replyTextID = rel.replyToClaimID
+                JOIN claim ON claim.text = rel.claim
                 JOIN user ON reply.postingUser = user.userID
                 WHERE claim.topic = ? AND claim.text = ?
             """, (topic_name, claim_text))
