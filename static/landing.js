@@ -1,29 +1,8 @@
 $(document).ready(function () {
   console.log("Landing.js loaded and ready");
   getTopics();
-  setupAuthLinks();
   setupSearch();
 });
-
-function setupAuthLinks() {
-  $(document).on("click", "#loginLink", function (e) {
-    e.preventDefault();
-    console.log("Login link clicked");
-    showLoginForm();
-  });
-
-  $(document).on("click", "#signupLink", function (e) {
-    e.preventDefault();
-    console.log("Signup link clicked");
-    showSignupForm();
-  });
-
-  $(document).on("click", "#logoutLink", function (e) {
-    e.preventDefault();
-    console.log("Logout link clicked");
-    logout();
-  });
-}
 
 function addTopic(topicName, postingUser) {
   $.ajax({

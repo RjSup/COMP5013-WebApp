@@ -199,6 +199,9 @@ function showSignupForm() {
 }
 
 function login(username, password) {
+
+  var currPageURL = window.location.href;
+
   $.ajax({
     type: "POST",
     url: "/login",
@@ -209,7 +212,7 @@ function login(username, password) {
     success: function (response) {
       console.log("Login success:", response);
       alert(response); // Display success message
-      window.location.href = "/";
+      window.location.href = currPageURL;
       checkLoggedIn();
     },
     error: function (xhr, status, error) {
@@ -223,6 +226,9 @@ function login(username, password) {
 }
 
 function signup(username, password) {
+
+  var currPageURL = window.location.href;
+
   $.ajax({
     type: "POST",
     url: "/signup",
@@ -233,7 +239,7 @@ function signup(username, password) {
     success: function (response) {
       console.log("Signup success:", response);
       alert(response); // Display success message
-      window.location.href = "/";
+      window.location.href = currPageURL;
       checkLoggedIn();
     },
     error: function (xhr, status, error) {

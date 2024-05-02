@@ -11,6 +11,10 @@ body {
     background: #f4f4f4;
 }
 
+section {
+    height: fit-content;
+}
+
 span {
     color: #6b7280; /* Changed to a darker gray for better contrast */
 }
@@ -135,15 +139,6 @@ nav {
     flex-direction: column;
 }
 
-footer {
-    color: #000000;
-    padding: 3px 20px;
-    display: flex;
-    justify-content: center;
-    background: #1a202c;
-    color: #ffffff; /* Changed to white for better contrast */
-}
-
 #topicCards {
     height: 60%;
 }
@@ -244,4 +239,13 @@ footer {
     justify-content: center;
     margin: 10px;
     padding: 10px;
+}
+
+footer {
+    color: #000000;
+    padding: 3px 3px;
+    display: flex;
+    justify-content: center;
+    background: #1a202c;
+    color: #ffffff; /* Changed to white for better contrast */
 }

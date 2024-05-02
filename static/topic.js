@@ -1,30 +1,9 @@
 $(document).ready(function () {
   console.log("Topic.js loaded and ready");
   checkLoggedIn();
-  setupAuthLinks();
   setupTopicPage();
   setupClaimEvents();
 });
-
-function setupAuthLinks() {
-  $(document).on("click", "#loginLink", function (e) {
-    e.preventDefault();
-    console.log("Login link clicked");
-    showLoginForm();
-  });
-
-  $(document).on("click", "#signupLink", function (e) {
-    e.preventDefault();
-    console.log("Signup link clicked");
-    showSignupForm();
-  });
-
-  $(document).on("click", "#logoutLink", function (e) {
-    e.preventDefault();
-    console.log("Logout link clicked");
-    logout();
-  });
-}
 
 function setupTopicPage() {
   var topicName = decodeURIComponent(document.title.split(" | ")[1].trim()); // Decode the topic name
