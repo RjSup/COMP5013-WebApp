@@ -110,15 +110,6 @@ def hash(password):
 # ROUTES
 # ====================
 
-# Logout route
-
-
-@app.route("/logout", methods=["GET", "POST"])
-def logout():
-    session.pop('user_id', None)
-    session.pop('logged_in', None)
-    return redirect("/")
-
 
 # Landing page route
 @app.route("/")
@@ -183,6 +174,7 @@ def login():
             return "login failed"
     else:
         return "Please log in"
+    
 
 
 # Check if user is logged in
@@ -194,6 +186,15 @@ def checkLogin():
     else:
         session.pop('logged_in', None)
         return jsonify({"logged_in": False})
+    
+
+
+# Logout route
+@app.route("/logout", methods=["GET", "POST"])
+def logout():
+    session.pop('user_id', None)
+    session.pop('logged_in', None)
+    return redirect("/")
 
 
 # Add topic route with admin validation
@@ -413,6 +414,7 @@ def fetch_replies(topic_name):
         except sqlite3.Error as e:
             print("SQLite error:", e)
     return "Failed to fetch replies. Please try again later.", 500
+
 
 
 # Start app
