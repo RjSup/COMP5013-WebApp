@@ -199,9 +199,6 @@ function showSignupForm() {
 }
 
 function login(username, password) {
-
-  var currPageURL = window.location.href;
-
   $.ajax({
     type: "POST",
     url: "/login",
@@ -212,7 +209,7 @@ function login(username, password) {
     success: function (response) {
       console.log("Login success:", response);
       alert(response); // Display success message
-      window.location.href = currPageURL;
+      window.location.href = "/";
       checkLoggedIn();
     },
     error: function (xhr, status, error) {
@@ -226,9 +223,6 @@ function login(username, password) {
 }
 
 function signup(username, password) {
-
-  var currPageURL = window.location.href;
-
   $.ajax({
     type: "POST",
     url: "/signup",
@@ -239,7 +233,7 @@ function signup(username, password) {
     success: function (response) {
       console.log("Signup success:", response);
       alert(response); // Display success message
-      window.location.href = currPageURL;
+      window.location.href = "/";
       checkLoggedIn();
     },
     error: function (xhr, status, error) {
@@ -278,16 +272,12 @@ function checkLoggedIn() {
       console.log("Check login success:", response);
       if (response.logged_in) {
         $("#authLinks").html(`<a id="logoutLink" href="#">Logout</a>`);
-        if (response.is_admin) {
-          $("#addTopicForm").show(); // Show add topic form for admins
-        } else {
-          $("#addTopicForm").hide(); // Hide add topic form for non-admins
-        }
+        $("#addTopicForm").show(); // Show add topic form for logged-in users
       } else {
         $("#authLinks").html(`
-                    <a id="loginLink" href="#">Login</a>
-                    <a id="signupLink" href="#">Sign Up</a>
-                `);
+          <a id="loginLink" href="#">Login</a>
+          <a id="signupLink" href="#">Sign Up</a>
+        `);
         $("#addTopicForm").hide(); // Hide add topic form for non-logged in users
       }
     },

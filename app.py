@@ -257,42 +257,38 @@ def add_topic():
     # If the request method is POST
     if request.method == "POST":
         # If user is an admin
-        if isAdmin(request):
-            # Get the topic name from the form
-            topicName = request.form["topicName"]
-            # Get the user ID from the session
-            postingUser = getUserId(request)
-            # Get the current time
-            creationTime = int(time.time())
+        # # Get the topic name from the form
+        topicName = request.form["topicName"]
+        # Get the user ID from the session
+        postingUser = getUserId(request)
+        # Get the current time
+        creationTime = int(time.time())
 
-            updateTime = creationTime
+        updateTime = creationTime
 
-            # Basic form validation
-            if not topicName:
-                return jsonify({"error": "Topic name is required"}), 400
+        # Basic form validation
+        if not topicName:
+            return jsonify({"error": "Topic name is required"}), 400
 
-            # Input sanitization by stripping leading and trailing spaces
-            topicName = topicName.strip()
+        # Input sanitization by stripping leading and trailing spaces
+        topicName = topicName.strip()
 
-            # Proceed with adding topic
-            conn = connectDB()
-            if conn:
-                try:
-                    c = conn.cursor()
-                    # Insert the topic data into the topic table
-                    c.execute("INSERT INTO topic (topicName, postingUser, creationTime, updateTime) VALUES (?, ?, ?, ?)",
-                              (topicName, postingUser, creationTime, updateTime))
-                    conn.commit()
-                    conn.close()
-                    return jsonify({"success": "Topic added successfully"})
-                except sqlite3.Error as e:
-                    print("SQLite error:", e)
-                    return jsonify({"error": "Failed to add topic. Please try again later."}), 500
-        else:
-            # Return an error if user is not an admin
-            return jsonify({"error": "Only admins can add topics"}), 403
+        # Proceed with adding topic
+        conn = connectDB()
+        if conn:
+            try:
+                c = conn.cursor()
+                # Insert the topic data into the topic table
+                c.execute("INSERT INTO topic (topicName, postingUser, creationTime, updateTime) VALUES (?, ?, ?, ?)",
+                          (topicName, postingUser, creationTime, updateTime))
+                conn.commit()
+                conn.close()
+                return jsonify({"success": "Topic added successfully"})
+            except sqlite3.Error as e:
+                print("SQLite error:", e)
+                return jsonify({"error": "Failed to add topic. Please try again later."}), 500
 
-        # Return an error if the request method is not POST
+    # Return an error if the request method is not POST
     return jsonify({"error": "Invalid request method"}), 405
 
 
