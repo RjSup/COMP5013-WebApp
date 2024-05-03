@@ -510,7 +510,6 @@ def fetch_replies(topic_name):
     return "Failed to fetch replies. Please try again later.", 500
 
 
-
 # Start app
 if __name__ == "__main__":
     app.run(debug=True)
