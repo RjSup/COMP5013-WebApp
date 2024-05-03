@@ -1,6 +1,9 @@
+// Load this script on every page of the website
 $(document).ready(function () {
+  // Set the year in the footer
   document.querySelector(".year").textContent = new Date().getFullYear();
   console.log("Common.js loaded and ready");
+  // Initialize common functionality
   setupAuthLinks();
   setupAddTopicForm();
   setupSearch();
@@ -8,7 +11,9 @@ $(document).ready(function () {
 });
 
 function setupAuthLinks() {
+  // Attach click event handlers to the login, signup, and logout links
   $(document).on("click", "#loginLink", function (e) {
+    // Prevent the default link behavior
     e.preventDefault();
     console.log("Login link clicked");
     showLoginForm();
@@ -27,15 +32,21 @@ function setupAuthLinks() {
   });
 }
 
+// Function to add a new topic
 function setupAddTopicForm() {
   $("#addTopicForm").submit(function (event) {
+    // Prevent the default form submission
     event.preventDefault();
+    // Get the topic name from the input field
     var topicName = $("#topicName").val();
     $.ajax({
+      // AJAX request to check if the user is logged in and is an admin
       url: "/check-login",
       type: "GET",
+      // Check if the user is logged in and is an admin
       success: function (response) {
         console.log("Check login success:", response);
+        // If the user is logged in and is an admin, add the topic
         if (response.logged_in && response.is_admin) {
           addTopic(topicName);
         } else {
@@ -43,6 +54,7 @@ function setupAddTopicForm() {
           showLoginForm();
         }
       },
+      // Log and alert on error
       error: function (xhr, status, error) {
         console.error("Error:", error);
         alert("Error: " + error); // Display error message
@@ -51,8 +63,10 @@ function setupAddTopicForm() {
   });
 }
 
+// Function to add a new topic
 function setupSearch() {
   $("#searchBtn").on("click", function () {
+    // Get the search term from the input field
     var searchTerm = $("#searchInput").val();
     if (searchTerm.trim() !== "") {
       // Check if the search term is not empty or whitespace
@@ -82,7 +96,7 @@ function setupSearch() {
 }
 
 function showLoginForm() {
-  // Create a modal container div
+  // Create a modal container div for showing the login form
   var modalHtml = `
         <div id="loginModal" class="modal2 common-model" role="dialog" aria-labelledby="loginModalTitle" aria-describedby="loginModalDescription">
             <div class="modal-content2">
@@ -141,7 +155,7 @@ function showLoginForm() {
 }
 
 function showSignupForm() {
-  // Create a modal container div
+  // Create a modal container div for showing the signup form
   var modalHtml = `
         <div id="signupModal" class="modal2 common-model" role="dialog" aria-labelledby="signupModalTitle" aria-describedby="signupModalDescription">
             <div class="modal-content2">
@@ -181,7 +195,9 @@ function showSignupForm() {
 
   // Close the modal when the close button or outside the modal is clicked
   $(document).on("click", ".close, .common-modal", function (e) {
+    // Close the modal if the user clicks outside the modal
     if (e.target === this) {
+      // Close the modal
       $("#signupModal").fadeOut(function () {
         $(this).remove();
       });
@@ -192,28 +208,38 @@ function showSignupForm() {
   $("#signupForm").submit(function (e) {
     e.preventDefault();
     console.log("Signup form submitted");
+    // Get the username and password from the form
     var username = $("#signupUsername").val();
+    // Get the password from the form
     var password = $("#signupPassword").val();
     signup(username, password);
   });
 }
 
+// Function to login the user
 function login(username, password) {
+
+  currPage = window.location.href;
+
   $.ajax({
+    // AJAX request to login the user
     type: "POST",
     url: "/login",
     data: {
       username: username,
       password: password,
     },
+    // Log success and alert on error
     success: function (response) {
       console.log("Login success:", response);
       alert(response); // Display success message
-      window.location.href = "/";
+      // Redirect to the current page
+      window.location = currPage;
       checkLoggedIn();
     },
     error: function (xhr, status, error) {
       console.error("Error:", error);
+      // Get the error message from the response JSON
       var errorMessage = xhr.responseJSON
         ? xhr.responseJSON.error
         : "An error occurred while logging in.";
@@ -222,7 +248,11 @@ function login(username, password) {
   });
 }
 
+// Function to sign up the user
 function signup(username, password) {
+
+  currPage = window.location.href;
+
   $.ajax({
     type: "POST",
     url: "/signup",
@@ -233,11 +263,12 @@ function signup(username, password) {
     success: function (response) {
       console.log("Signup success:", response);
       alert(response); // Display success message
-      window.location.href = "/";
+      window.location = currPage;
       checkLoggedIn();
     },
     error: function (xhr, status, error) {
       console.error("Error:", error);
+      // Get the error message from the response JSON
       var errorMessage = xhr.responseJSON
         ? xhr.responseJSON.error
         : "An error occurred while signing up.";
@@ -246,6 +277,7 @@ function signup(username, password) {
   });
 }
 
+// Function to logout the user
 function logout() {
   $.ajax({
     type: "POST",
@@ -256,6 +288,7 @@ function logout() {
     },
     error: function (xhr, status, error) {
       console.error("Error:", error);
+      // Get the error message from the response JSON
       var errorMessage = xhr.responseJSON
         ? xhr.responseJSON.error
         : "An error occurred while logging out.";
@@ -264,16 +297,21 @@ function logout() {
   });
 }
 
+// Function to checklogged in user
 function checkLoggedIn() {
   $.ajax({
     type: "GET",
     url: "/check-login",
     success: function (response) {
+      // Log success and update topics
       console.log("Check login success:", response);
+      // Update the auth links based on the response
       if (response.logged_in) {
+        // If the user is logged in, show the logout link
         $("#authLinks").html(`<a id="logoutLink" href="#">Logout</a>`);
         $("#addTopicForm").show(); // Show add topic form for logged-in users
       } else {
+        // If the user is not logged in, show the login and signup links
         $("#authLinks").html(`
           <a id="loginLink" href="#">Login</a>
           <a id="signupLink" href="#">Sign Up</a>
@@ -284,6 +322,7 @@ function checkLoggedIn() {
   });
 }
 
+// Function to searxh topics
 function searchTopics(searchTerm) {
   $.ajax({
     type: "GET",
@@ -293,8 +332,10 @@ function searchTopics(searchTerm) {
     },
     success: function (response) {
       console.log("Search success:", response);
+      // Display search results
       displaySearchResults(response.results);
     },
+    // Log and alert on error
     error: function (xhr, status, error) {
       console.error("Error:", error);
       alert("Search failed: " + error); // Display error message
@@ -302,13 +343,16 @@ function searchTopics(searchTerm) {
   });
 }
 
+// Function to display search results
 function displaySearchResults(results) {
+  // Create a modal container div for showing the search results
   var modalContent = '<div id="searchResultsModal" class="modal">';
   modalContent += '<div class="modal-content">';
   modalContent += '<span class="close">&times;</span>';
   modalContent += "<h2>Search Results</h2>";
   modalContent += '<div id="searchResultsList">';
 
+  // Display the number of results
   if (results.topics.length > 0) {
     modalContent += "<h3>Topics</h3>";
     modalContent += "<ul>";
@@ -320,6 +364,7 @@ function displaySearchResults(results) {
         topic.topicName +
         "</a></li>";
     });
+    // Close the topics list
     modalContent += "</ul>";
   }
 
@@ -347,7 +392,9 @@ function displaySearchResults(results) {
   });
 }
 
+// Function to sanatize inputs
 function sanitizeInput(input) {
+  // Replace special characters with HTML ones
   return input
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")

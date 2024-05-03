@@ -1,127 +1,134 @@
-// on document ready event handle the following functions
+// This function sets up the necessary actions when the document is ready
 $(document).ready(function () {
-  console.log("Topic.js loaded and ready");
-  checkLoggedIn();
-  setupTopicPage();
-  setupClaimEvents();
+  console.log("Topic.js loaded and ready"); // Log that the script is loaded
+  checkLoggedIn(); // Check if the user is logged in
+  setupTopicPage(); // Set up the topic page
+  setupClaimEvents(); // Set up event handlers for claims
 });
 
+// This function sets up the topic page
 function setupTopicPage() {
-  var topicName = decodeURIComponent(document.title.split(" | ")[1].trim()); // Decode the topic name
-  $(".topicHeader h1").text(topicName);
-  fetchClaims(topicName);
+  var topicName = decodeURIComponent(document.title.split(" | ")[1].trim()); // Decode the topic name from the document title
+  $(".topicHeader h1").text(topicName); // Set the topic name in the header
+  fetchClaims(topicName); // Fetch claims related to the topic
 }
 
+// This function sets up event handlers for claims
 function setupClaimEvents() {
+  // Event handler for adding a claim
   $(document).on("click", "#addClaimButton", function (event) {
-    event.preventDefault();
-    addClaim();
+    event.preventDefault(); // Prevent default form submission
+    addClaim(); // Call the function to add a claim
   });
 
+  // Event handler for showing claim details
   $(document).on("click", ".card", function () {
-    showClaimDetails($(this).find("p:first").text().trim());
+    showClaimDetails($(this).find("p:first").text().trim()); // Call the function to show claim details
   });
 
+  // Event handler for closing the claim modal
   $(".close, .modal2").on("click", function (event) {
     if (event.target === this) {
-      $("#claimModal").css("display", "none");
+      $("#claimModal").css("display", "none"); // Close the claim modal
     }
   });
 
+  // Event handler for submitting a reply form
   $(document).on("submit", "#replyForm", function (event) {
-    event.preventDefault();
-    submitReplyForm();
+    event.preventDefault(); // Prevent default form submission
+    submitReplyForm(); // Call the function to submit a reply
   });
 }
 
+// Function to add a claim
 function addClaim() {
-  var claimText = $("#claimText").val().trim();
-  var postingUser = $("#currentUserId").val();
-  var topicName = $(".addClaimForm").data("topic");
+  var claimText = $("#claimText").val().trim(); // Get the claim text from the input field
+  var postingUser = $("#currentUserId").val(); // Get the posting user ID
+  var topicName = $(".addClaimForm").data("topic"); // Get the topic name from the form data
 
   // Sanitize claim text to prevent XSS attacks
   claimText = sanitizeInput(claimText);
 
-  // Validate if claim text is not empty
+  // Validate claim text
   if (!claimText) {
-    console.log("Claim text cannot be empty");
-    return; // Exit the function if claim text is empty
+    console.log("Claim text cannot be empty"); // Log an error if claim text is empty
+    return;
   }
 
   // Check claim text length
   if (claimText.length > 500) {
-    // Set the maximum length (e.g., 500 characters)
-    console.log("Claim text is too long");
-    return; // Exit the function if claim text is too long
+    console.log("Claim text is too long"); // Log an error if claim text is too long
+    return;
   }
 
+  // AJAX request to add the claim
   $.ajax({
     url: "/add_claim",
     type: "POST",
     data: {
-      topic_name: topicName, // Use the original topic name
+      topic_name: topicName,
       claimText: claimText,
       postingUser: postingUser,
     },
     success: function (response) {
-      console.log("Add claim success:", response);
-      fetchClaims(topicName);
-      $("#claimText").val("");
+      console.log("Add claim success:", response); // Log success message
+      fetchClaims(topicName); // Fetch claims after adding a new one
+      $("#claimText").val(""); // Clear the claim text input field
     },
     error: function (xhr, status, error) {
-      console.error("Error adding claim:", xhr.responseText);
-      alert("Failed to add claim: " + xhr.responseText); // Display an alert with the error message
+      console.error("Error adding claim:", xhr.responseText); // Log error message
+      alert("Failed to add claim: " + xhr.responseText); // Show error message to user
     },
   });
 }
 
+// Function to show claim details
 function showClaimDetails(claimText) {
-  var topicName = decodeURIComponent(document.title.split(" | ")[1].trim()); // Decode the topic name
-  $("#claimDetail").text(claimText);
-  $("#claimModal").css("display", "block");
-
-  console.log("Topic Name:", topicName);
-  console.log("Claim Text:", claimText);
-
-  fetchReplies(topicName, claimText);
+  var topicName = decodeURIComponent(document.title.split(" | ")[1].trim()); // Decode the topic name from the document title
+  $("#claimDetail").text(claimText); // Set the claim text in the claim detail section
+  $("#claimModal").css("display", "block"); // Show the claim modal
+  fetchReplies(topicName, claimText); // Fetch replies related to the claim
 }
 
+// Function to submit a reply form
 function submitReplyForm() {
-  var replyText = $("#replyText").val().trim();
-  var replyType = $('input[name="replyType"]:checked').val();
-  var topicName = decodeURIComponent($("#claimDetail").text().trim()); // Decode the topic name
+  var replyText = $("#replyText").val().trim(); // Get the reply text from the input field
+  var replyType = $('input[name="replyType"]:checked').val(); // Get the reply type
+  var topicName = decodeURIComponent($("#claimDetail").text().trim()); // Decode the topic name from the claim detail section
 
-  // Validate if reply text is not empty
+  // Validate reply text
   if (!replyText) {
-    console.log("Reply text cannot be empty");
-    return; // Exit the function if reply text is empty
+    console.log("Reply text cannot be empty"); // Log an error if reply text is empty
+    return;
   }
 
   // Check reply text length
   if (replyText.length > 300) {
-    // Set the maximum length (e.g., 300 characters)
-    console.log("Reply text is too long");
-    return; // Exit the function if reply text is too long
+    console.log("Reply text is too long"); // Log an error if reply text is too long
+    return;
   }
 
+  // Submit the reply
   if (replyText && replyType && topicName) {
     submitReply(replyText, replyType, topicName);
   } else {
-    console.log("Error");
+    console.log("Error"); // Log an error if required data is missing
   }
 }
 
+// Function to fetch claims related to a topic
 function fetchClaims(topicName) {
+  // AJAX request to fetch claims
   $.ajax({
     type: "GET",
     url: "/fetch_claims/" + topicName,
     success: function (response) {
-      console.log("Fetch claims response:", response);
-      renderClaims(response.claims);
+      console.log("Fetch claims response:", response); // Log the response
+      renderClaims(response.claims); // Render fetched claims
     },
     error: function (xhr, status, error) {
-      console.error("Error fetching claims:", xhr.responseText);
-      alert("Failed to fetch claims: " + xhr.responseText); // Display an alert with the error message
+      console.error("Error fetching claims:", xhr.responseText); // Log error message
+      alert("Failed to fetch claims: " + xhr.responseText); // Show error message to user
     },
   });
 }
