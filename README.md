@@ -2,7 +2,7 @@
 USERNAME = rjsup
 PASSWORD = pass
 
-# Disclamer - all topics and opinions are completly random and do not reflect the creater.
+# Disclamer - all topics and claims are completly random and do not reflect the creater.
 
 # TROUBLES
 
@@ -12,7 +12,5 @@ PASSWORD = pass
     * search bar still giving problems
 
 -- MODIFY LOGIN SIGNUP NAMES TO BE UNIQUE
-
--- FIX FOOTBALL PAGE SPACING OF football footer
 
 -- GENERALLY CLEAN THE CODE -- MINIMIZE FUNCTIONS WHO BEHAVE SIMILAR ETC
