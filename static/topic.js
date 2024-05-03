@@ -1,3 +1,4 @@
+// on document ready event handle the following functions
 $(document).ready(function () {
   console.log("Topic.js loaded and ready");
   checkLoggedIn();

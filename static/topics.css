@@ -1,19 +1,21 @@
+/** Reset CSS */
 * {
     margin: 0;
     box-sizing: border-box;
 }
 
-/** General Styles */
+/** General Body Styles */
 body {
     font-family: "Roboto", sans-serif;
     line-height: 1.6;
     background: #f4f4f4;
 }
 
+
 h2 {
     display: flex;
     justify-content: center;
-    color: #1a202c; /* Added color for better contrast */
+    color: #1a202c; 
 }
 
 #claimDetail {
@@ -23,9 +25,11 @@ h2 {
     padding-bottom: 10px;
 }
 
+
+/** Navigation Styles */
 nav {
     background: #1a202c;
-    color: #ffffff; /* Changed to white for better contrast */
+    color: #ffffff;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
@@ -35,12 +39,12 @@ nav {
 .title a {
     font-size: 24px;
     text-decoration: none;
-    color: #ffffff; /* Changed to white for better contrast */
+    color: #ffffff; 
     cursor: pointer;
 }
 
 .auth-links a {
-    color: #ffffff; /* Changed to white for better contrast */
+    color: #ffffff; 
     text-decoration: none;
     margin-left: 10px;
 }
@@ -59,7 +63,7 @@ nav {
 }
 
 .auth-form a {
-    color: #ffffff; /* Changed to white for better contrast */
+    color: #ffffff;
     text-decoration: none;
 }
 
@@ -86,10 +90,11 @@ nav {
     margin-bottom: 10px;
 }
 
+/** Topic Styles */
 .topicHeader h1 {
     text-align: center;
     margin-top: 20px;
-    color: #1a202c; /* Added color for better contrast */
+    color: #1a202c;
 }
 
 .addClaimForm {
@@ -104,7 +109,7 @@ nav {
 .addClaimForm h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #1a202c; /* Added color for better contrast */
+    color: #1a202c; 
 }
 
 .addClaimForm input[type="text"], .addClaimForm textarea {
@@ -119,7 +124,7 @@ nav {
     width: 100%;
     padding: 10px;
     background: #1a202c;
-    color: #ffffff; /* Changed to white for better contrast */
+    color: #ffffff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -130,40 +135,41 @@ nav {
 }
 
 .addClaimForm textarea {
-    resize: vertical; /* Allow vertical resizing */
-    min-height: 100px; /* Set minimum height */
-    max-height: 200px; /* Set maximum height */
+    resize: vertical;
+    min-height: 100px;
+    max-height: 200px;
 }
 
+/** Card Styles */
 .container {
     height: max-content;
 }
 
-/* Popup modal styles */
+/* Popup modal styles for replies */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Modal styles */
 .modal2 {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
 }
 
 /* Modal content */
@@ -171,13 +177,13 @@ nav {
     flex-direction: column;
     justify-content: space-between;
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 70%; /* Could be more or less, depending on screen size */
-    max-width: 1000px; /* Max width */
+    width: 70%;
+    max-width: 1000px;
     border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Box shadow */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Modal content */
@@ -185,16 +191,16 @@ nav {
     display: flex;
     flex-direction: column;
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: min-content; /* Could be more or less, depending on screen size */
+    width: min-content;
     border-radius: 15px;
 }
 
 /* Close button */
 .close {
-    color: #aaaaaa; /* Lightened for better contrast */
+    color: #aaaaaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -207,7 +213,7 @@ nav {
     cursor: pointer;
 }
 
-/* Modern input styles */
+/* input styles */
 .in[type="text"],
 .in[type="password"],
 textarea {
@@ -219,10 +225,10 @@ textarea {
     margin-top: 6px;
     margin-bottom: 16px;
     resize: vertical;
-    color: #1a202c; /* Added color for better contrast */
+    color: #1a202c;
 }
 
-/* Modern button styles */
+/* button styles */
 #btn2 {
     background-color: #4CAF50;
     color: white;
@@ -249,18 +255,19 @@ textarea {
 
 .btnbtn {
     background: #1a202c;
-    color: #ffffff; /* Changed to white for better contrast */
+    color: #ffffff;
     padding: 5px;
     border-radius: 5px;
     text-decoration: none;
     cursor: pointer;
 }
 
+/** Footer Styles */
 footer {
     color: black;
     padding: 3px 20px;
     display: flex;
     justify-content: center;
     background: #1a202c;
-    color: #ffffff; /* Changed to white for better contrast */
+    color: #ffffff;
 }
