@@ -256,7 +256,6 @@ def logout():
 def add_topic():
     # If the request method is POST
     if request.method == "POST":
-        # If user is an admin
         # # Get the topic name from the form
         topicName = request.form["topicName"]
         # Get the user ID from the session
