@@ -337,8 +337,6 @@ function renderReplies(replies) {
       event.preventDefault();
       var replyText = replyTextArea.val();
       var replyType = replyTypeSelect.val();
-      // Implement your logic to handle the reply submission
-      // You can use replyText and replyType variables to send the data to the server
       console.log("Reply Text:", replyText);
       console.log("Reply Type:", replyType);
       // Clear reply input after submission
